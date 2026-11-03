@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net48</TargetFramework><EnableDefaultCompileItems>false</EnableDefaultCompileItems><LangVersion>latest</LangVersion></PropertyGroup>
+  <ItemGroup><Compile Include="SafetyEngine.cs" /></ItemGroup>
+  <ItemGroup><PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="All" /></ItemGroup>
+</Project>

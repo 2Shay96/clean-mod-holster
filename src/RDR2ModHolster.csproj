@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>CLEAN_v3.2</AssemblyName>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Deterministic>true</Deterministic>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="UI\**\*.cs" Exclude="UI\bin\**;UI\obj\**" />
+    <Compile Include="Safety\**\*.cs" Exclude="Safety\bin\**;Safety\obj\**" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Assets/sunrise.png" LogicalName="RDR2ModHolster.sunrise.png" /></ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets/Icons/*.svg" LogicalName="RDR2ModHolster.Icon.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Assets/Lettering/clean-title.svg" LogicalName="RDR2ModHolster.clean-title.svg" />
+    <EmbeddedResource Include="Assets/Lettering/clean-subtitle.svg" LogicalName="RDR2ModHolster.clean-subtitle.svg" />
+  </ItemGroup>
+</Project>

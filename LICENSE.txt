@@ -1,0 +1,69 @@
+CLEAN Source-Available Noncommercial Licence 1.0
+Copyright (c) 2026 2Shay. All rights reserved except as expressly granted below.
+
+1. Scope
+This licence covers only copyright and other rights in CLEAN - Mod Remover and Holster
+that 2Shay (the Licensor) owns or is authorised to license under these terms (Covered
+Material). Separately licensed material is governed by section 6 instead. This licence
+does not establish that the Licensor owns any unidentified third-party contribution.
+
+2. Inspection and private use
+Subject to these terms, you may read, download, copy, compile, run, study and privately
+modify Covered Material for your personal, noncommercial purposes, without charge.
+No promise is made to publish future source, deliver an update or provide support.
+
+3. Free redistribution
+You may redistribute Covered Material and your modifications noncommercially, in source
+or binary form, without charging for access or requiring a donation or subscription.
+Keep this licence and all applicable copyright and third-party notices. Identify 2Shay
+as the original CLEAN author, mark modifications prominently, and distinguish your fork
+and version from the official release. When distributing a modified binary, provide
+its complete corresponding modified source under these same terms at no charge.
+Do not add terms that remove recipients' rights granted here. You may not imply author
+endorsement or use CLEAN branding to misrepresent a modified build as official.
+Ordinary advertising by a general file-hosting platform does not alone make an otherwise
+free, compliant mirror commercial. This exception does not permit commercial bundling,
+paid access, selling advertisements inside CLEAN or monetising a CLEAN-derived product.
+
+4. Commercial rights reserved
+Except for section 6, no permission is granted to sell or rent Covered Material, charge
+for access, include it in a paid product, offer a paid hosted or managed CLEAN service,
+use it in a commercial business workflow, or monetise a derivative distribution through
+donations, subscriptions, advertising sold for that distribution, or platform rewards.
+Such uses require a separate written licence from 2Shay. This does not restrict the
+Licensor's own commercial licensing or author-controlled voluntary support/rewards.
+Nothing requires the Licensor to release future versions under these terms. Rights
+already granted in a released version remain in force while its recipients comply.
+
+5. Support and names
+Voluntary support for 2Shay through the official support link does not purchase access,
+updates, assistance, promised features or a delivery date. No trademark rights are
+granted beyond truthful attribution and identification of an unmodified official release.
+Game trademarks remain with their owners; no game publisher endorsement is implied.
+
+6. Existing and third-party permissions
+This licence does not restrict or replace rights separately granted under MIT or another
+licence. Previously published MIT versions and reused MIT portions retain their MIT
+permissions, including commercial use, modification, redistribution and sale, subject to
+their notice requirements. Keep each applicable notice and identify its covered material.
+Nothing here revokes an earlier valid permission. The restrictions in this licence apply
+only to Covered Material to the extent the Licensor has the right to impose them.
+
+7. Term and breach
+The permissions in sections 2 and 3 are worldwide, non-exclusive and royalty-free for
+the duration of applicable copyright, subject to compliance. If you breach these terms,
+the permissions for Covered Material terminate. The Licensor may separately reinstate
+them in writing. Existing third-party licences are unaffected. Recipients of compliant
+redistributions do not lose their permissions solely because their distributor breaches.
+
+8. No warranty; limited liability
+To the extent allowed by applicable law, Covered Material is provided "as is", without
+warranties of merchantability, fitness for a particular purpose, title or noninfringement.
+To that extent the Licensor and contributors are not liable for loss of data, profits,
+business or other direct or indirect damage arising from its use or inability to use it.
+Nothing excludes liability or consumer rights that applicable law does not permit to
+be excluded, including liability for fraud or death/personal injury caused by negligence.
+
+9. Separate permission
+Contact 2Shay through the official CLEAN development page for commercial or other
+permissions outside this grant. Silence does not grant additional permission.

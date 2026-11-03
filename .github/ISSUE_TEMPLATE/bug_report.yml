@@ -1,0 +1,32 @@
+name: Bug report
+description: Report a problem with CLEAN - Mod Remover and Holster
+body:
+  - type: input
+    id: build
+    attributes:
+      label: CLEAN version and executable SHA-256
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Windows version, display scaling, launcher and game build
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps, expected result and actual result
+      description: Include whether LML was reinstalled while holstered and whether a launcher repair occurred.
+    validations:
+      required: true
+  - type: textarea
+    id: recovery
+    attributes:
+      label: Session state, recovery actions and files preserved
+      description: Keep your backups. Redact personal paths before sharing logs; never upload saves, credentials or full game files.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted errors or screenshots
+      description: File operations alone do not prove a clean game or online safety. Story Mode tests only.

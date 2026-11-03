@@ -1,0 +1,37 @@
+# CLEAN - Mod Remover and Holster v3.2
+
+Unreleased preparation, updated 29 October 2026. No previous v3.2 distribution.
+
+Alpha 1 already included reviewed selections, unchecked unknowns, protected paths,
+journalled SHA256 inventories, staging, resumable operations, no silent overwrites,
+all-conflict reporting, moved-aside recovery, root-rebinding consent, manifest size
+guards and conditional LML NLog recognition.
+
+Windows preparation changes:
+
+- Re-read/checksum staged bytes before commit; verify restored destinations and
+  remaining backups before backup removal. Reject file/directory case aliases;
+  use a path dictionary for large inventories.
+- Give session paths and concrete recovery steps. Correct disk-full wording so
+  partial staging is not described as a verified backup. Real error 112 recovery tested.
+- Clear stale results when Delete is cancelled after holstering; retain separate
+  typed DELETE confirmation.
+- Use confirmed product name, supplied multi-size icon and app-only RDR2 artwork.
+  Align fixed title/subtitle vectors, add 5% CLEAN tracking and fit short headers.
+  No working font ships.
+- Align sidebar rows/gold headings; use clearer supplied scalable action icons,
+  explicit labels and distinct Holster/Restore/Delete colours.
+- Make empty-dashboard Scan Mods a real keyboard-accessible action.
+- Fix native DPI docking, caption painting, fresh-dialog text sizing and phantom
+  horizontal scrollbars. Relevant final checks 190 UI/native 12; actual four scales
+  and two common resolutions inspected.
+- Add About/Support with confirmed PayPal link and conditional GTA VI roadmap.
+  Show activity/bytes without misleading whole-operation percentages or ETAs.
+- Correct Windows readonly expectations and explicitly skip Linux-only fixtures.
+  Add native safety/fault/recovery/load checks, build docs and local CI setup.
+- Adopt author-approved source-available noncommercial code licence. Earlier MIT
+  rights survive. Retain asset notices including Holster CC BY-SA 3.0 and separate art.
+
+Actual Windows results, build identities and earlier Steam/LML/Script Hook game
+evidence: VALIDATION.md. Historical crashes are not proven fixed. No Online or ban
+safety claim. Final ZIP verification/publication handoff remains pending.

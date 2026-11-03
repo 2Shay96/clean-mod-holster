@@ -1,0 +1,25 @@
+CLEAN application artwork — separate third-party material
+
+On 28 October 2026 the author requested the supplied RDR2 promotional artwork
+inside the application only. No new stand-alone release-page banner is requested.
+The supplied 4000x1156 PNG is embedded byte-identically; header rendering crops it
+without changing the source file and adds gradients for text/control readability.
+
+Author identifies this as official Red Dead Redemption 2 artwork. It is not original
+CLEAN artwork and is not covered by the code permissions in LICENSE.txt. Copyright
+and other rights remain with its respective rights holders. No publisher endorsement,
+redistribution permission, commercial clearance or Donation Points permission is
+established by this notice or by the author's request. On 29 October 2026 the author
+chose release with the current artwork/icon, with replacement contemplated later.
+The permission request was sent; the 28 October automated reply is not permission.
+No explicit written authorization is recorded. Site/Donation Points eligibility
+remains unresolved. Final package/publication handoff is pending. Do not declare
+all package content original or imply rights-holder approval.
+
+Provenance: supplied Alpha1 source ZIP, src/Assets/sunrise.png, referenced in its
+ARTWORK-NOTICE.txt as "upscaled RDR2 promo art for taskbar.png".
+SHA256: 01c2cdd0d952c058ddf3428ba02a389f1de42b0511fb79754af9c3a73e315f62
+On28October the author additionally supplied CLEAN.ico and CLEAN-256.png for the app
+icon. They replace the procedural icon, with exact hashes and reported image-generation
+provenance in docs/ICON-PROVENANCE.md. Do not infer third-party artwork/trademark
+clearance from the supplied files or the code licence. Previous icons remain archived.

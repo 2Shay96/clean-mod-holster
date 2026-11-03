@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework><OutputType>Exe</OutputType>
+    <ImplicitUsings>disable</ImplicitUsings><Nullable>disable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <DefineConstants>$(DefineConstants);HOLSTER_TESTS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup><Compile Include="Program.cs" /><Compile Include="V32Tests.cs" /><Compile Include="../src/Safety/SafetyEngine.cs" Link="SafetyEngine.cs" /></ItemGroup>
+</Project>

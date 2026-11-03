@@ -1,0 +1,38 @@
+# Secrets
+.env
+.env.*
+*.key
+*.pem
+secrets/
+
+# Python / Node
+.venv/
+venv/
+__pycache__/
+*.pyc
+node_modules/
+
+# Build output, logs, agent scratch
+build/
+dist/
+*.log
+scratch/
+_to_delete/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+
+# Game archives and extracted game data (never commit)
+*.esm
+*.bsa
+*.ba2
+*.rpf
+
+# Preserved supplied packages, private toolchain, build intermediates
+upstream/
+.dotnet/
+**/bin/
+**/obj/
+*.zip

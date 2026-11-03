@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net48</TargetFramework><OutputType>Exe</OutputType><LangVersion>latest</LangVersion><ProductionAssembly Condition="'$(ProductionAssembly)' == ''">../../src/bin/Release/net48/CLEAN_v3.2.exe</ProductionAssembly><AppConfig>../../src/App.config</AppConfig></PropertyGroup>
+  <ItemGroup><Reference Include="CLEAN"><HintPath>$(ProductionAssembly)</HintPath><Private>true</Private></Reference><Reference Include="System.Xml.Linq"/><PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all"/></ItemGroup>
+</Project>

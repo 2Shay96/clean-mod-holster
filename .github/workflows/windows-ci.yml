@@ -1,0 +1,32 @@
+name: Windows safety validation
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build and exercise disposable fixtures
+        shell: pwsh
+        run: ./build.ps1 -Extended
+      - name: Retain validation reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-validation
+          path: |
+            release-test-report.json
+            scratch/**/results.xml
+          if-no-files-found: warn
+          retention-days: 14
+# No publishing or repository writes. Native UI and game launches need an interactive PC.

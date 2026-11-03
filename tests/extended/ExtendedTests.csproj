@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework><OutputType>Exe</OutputType>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems><DefineConstants>HOLSTER_TESTS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup><Compile Include="Program.cs"/><Compile Include="../../src/Safety/SafetyEngine.cs"/></ItemGroup>
+</Project>
