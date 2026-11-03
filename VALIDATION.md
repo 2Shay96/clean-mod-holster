@@ -1,8 +1,9 @@
 # CLEAN - Mod Remover and Holster — Windows validation
 
-Updated 29 October 2026. Private v3.2 preparation; final ZIP verification and complete
-publication handoff pending. Author: 2Shay. Production .NET Framework 4.8; SDK 8.0.427.
-No public release, commit, tag or remote CI run is recorded.
+Updated 3 November 2026. Author: 2Shay. Production .NET Framework 4.8; SDK 8.0.427.
+Prepared release materials remain unpublished pending author review. Private repository
+commit 6c30496f659c5c45efe94fea0c825af56de281d2 passed Windows CI run41675459572.
+Documentation/packaging updates after that commit do not change production source/assets.
 
 ## Latest source and executable
 
@@ -25,8 +26,10 @@ The earlier final14/final15 PowerShell transcripts retain invocation/timing but 
 child stdout. A fresh UI harness confirmation passed 190 assertions; complete output
 is retained in final-ui-native-20261029/step3-ui-output.txt. Native XML retains all
 12 final15 results and the exact loaded EXE hash.
-These are source/executable checks, not final ZIP tests. Candidate04 is retained
-rollback, not the current payload.
+Candidate05 exact ZIP extraction/source/native checks passed on 29 October; see
+FINAL-PACKAGE-CHECKS-20261029.md. The final distribution-format package receives its
+own checksum/extraction/exact-assembly check recorded in the companion validation
+report. Candidate04 and candidate05 are retained unchanged for rollback/history.
 
 Native checks cover read-only files, sharing/retry, denied access, invalid/unreadable/
 missing/oversized manifests, case aliases, junctions, changing file types, process locks,
@@ -82,8 +85,8 @@ Later UI changes received relevant regressions; no new gameplay result is inferr
 
 ## Remaining checks and limits
 
-- Fresh binary/config/source packaging, safe extraction, member/source hashes,
-  clean source build, exact extracted-EXE tests and packaged screenshots.
+- Final distribution packaging results are recorded separately in the companion
+  validation report; prior results are not relabelled as new tests.
 - Untested Epic/standalone Rockstar, mixed monitors, real Known Folder redirection,
   native long-path-enabled host and actual ReShade gameplay.
 - Every interruption boundary, physical power loss and exhaustive assistive technology
@@ -93,9 +96,11 @@ Later UI changes received relevant regressions; no new gameplay result is inferr
   vanilla archives or guarantee online access/ban safety.
 - Author adopted the licence28 Oct and chooses current artwork for release.
   Take-Two request sent; only automatic reply recorded, no explicit permission.
-  Included-asset/Donation Points eligibility remains unresolved.
-- Remote CI, restrictive-licence funding eligibility and controlled RDR2Mods
-  destination unverified. See docs/release/READINESS-REVIEW.md.
+  Artwork clearance remains unresolved; CLEAN was opted out of Donation Points3Nov.
+- Private Windows CI passed3Nov: engine38/release21/extended17/native13, four
+  Linux-specific skips. No CI UI/game/physical-disk-full coverage. CI executable
+  differs from the local packaged binary. RDR2Mods author account2Shay verified;
+  no listing submitted. GitHub funding-button eligibility remains unconfirmed.
 
 No unexplained file loss, overwrite or unrecoverable operation was observed in passing
 scenarios. This is limited evidence, not a guarantee.
@@ -106,3 +111,12 @@ Supplied Alpha 1 reports Linux .NET/Mono/Xvfb 40 engine passes, 22 release passe
 Windows skip and 141 UI assertions. These are prior reported results, not results
 reproduced on this PC. Supplied v3.1 UI notes/counts are superseded by UI-CHANGES.md.
 Imports and raw failures remain preserved.
+
+## Screenshot walkthrough — 3 November 2026
+
+Ten new native3840x2160 app-window captures downsampled to1920x1080 PNG were
+visually checked and approved by the author. Dialogs use the actual app background;
+no pointer capture, added labels or framing. Disposable fixture session03260daceff8568f
+completed Holster/Restore; both mod hashes and unknown/protected fixture bytes matched.
+The permanent Delete prompt was cancelled. This is a packaged-assembly fixture cycle,
+not a new real-game compatibility result. No production changes were made for captures.

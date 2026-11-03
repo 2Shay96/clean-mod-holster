@@ -5,8 +5,8 @@ deletes selected Red Dead Redemption 2 mod files. Known game/launcher content is
 protected, unknown files start unchecked, and transfers use journalled backups and
 SHA-256 checks. ReShade and ENB have separate actions.
 
-## Status
-**Private v3.2 release candidate. Not approved for public publication.**
+## Version 3.2
+Portable Windows release.
 See [VALIDATION.md](VALIDATION.md) for actual Windows checks and remaining limits.
 The old Linux/Mono screenshots/results are historical and are not native evidence.
 
@@ -42,10 +42,9 @@ the notices are retained in [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt).
 Build instructions: [BUILD.md](BUILD.md). Changes: [CHANGELOG.md](CHANGELOG.md).
 The application header uses the author-supplied RDR2 promotional artwork. This is
 separate third-party material, excluded from the code licence; see
-[ARTWORK-NOTICE.txt](ARTWORK-NOTICE.txt). Its public redistribution/DP clearance is
-unresolved. The author chooses release with the current artwork; that decision is not
-rights-holder permission. Final package verification and the complete publication
-handoff are still pending.
+[ARTWORK-NOTICE.txt](ARTWORK-NOTICE.txt). Its redistribution clearance remains unresolved. The author chooses release with the
+current artwork; that decision is not rights-holder permission. CLEAN is opted out of
+Nexus Donation Points.
 
 [Support CLEAN through PayPal](https://www.paypal.com/donate/?hosted_button_id=G677UQMTPA5EL).
 Support is voluntary and does not buy access, updates, assistance or promised features.

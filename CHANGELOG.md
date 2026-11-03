@@ -1,6 +1,6 @@
 # CLEAN - Mod Remover and Holster v3.2
 
-Unreleased preparation, updated 29 October 2026. No previous v3.2 distribution.
+Version 3.2. Prepared for author review on 3 November 2026; no previous v3.2 distribution.
 
 Alpha 1 already included reviewed selections, unchecked unknowns, protected paths,
 journalled SHA256 inventories, staging, resumable operations, no silent overwrites,
@@ -34,4 +34,4 @@ Windows preparation changes:
 
 Actual Windows results, build identities and earlier Steam/LML/Script Hook game
 evidence: VALIDATION.md. Historical crashes are not proven fixed. No Online or ban
-safety claim. Final ZIP verification/publication handoff remains pending.
+safety claim. Exact-package checks and remaining limits are recorded in the accompanying validation report.

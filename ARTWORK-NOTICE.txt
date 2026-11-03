@@ -12,8 +12,8 @@ redistribution permission, commercial clearance or Donation Points permission is
 established by this notice or by the author's request. On 29 October 2026 the author
 chose release with the current artwork/icon, with replacement contemplated later.
 The permission request was sent; the 28 October automated reply is not permission.
-No explicit written authorization is recorded. Site/Donation Points eligibility
-remains unresolved. Final package/publication handoff is pending. Do not declare
+No explicit written authorization is recorded. CLEAN was opted out of Nexus
+Donation Points on 3 November 2026; this does not establish artwork permission. Do not declare
 all package content original or imply rights-holder approval.
 
 Provenance: supplied Alpha1 source ZIP, src/Assets/sunrise.png, referenced in its

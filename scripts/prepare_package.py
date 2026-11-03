@@ -1,8 +1,9 @@
-"""Create private review ZIPs from an explicit allowlist. No upload or release mode."""
+"""Create unpublished review ZIPs from an explicit allowlist. Never uploads."""
 import argparse, datetime, hashlib, json, pathlib, zipfile
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser()
 parser.add_argument('--name',default='v32-private-candidate-03')
+parser.add_argument('--distribution',action='store_true',help='Use distribution-format notices; still unpublished pending review')
 args=parser.parse_args()
 assert args.name.replace('-','').replace('_','').isalnum()
 out=ROOT/'build'/args.name
@@ -18,11 +19,13 @@ readme=['ARTWORK-NOTICE.txt','LICENSE.txt','README.md','BUILD.md','UPGRADE-RECOV
 licences=['docs/ACTION-ICONS.md','docs/HEADER-LETTERING.md','docs/ICON-PROVENANCE.md','docs/LICENCE-PROPOSAL.md','docs/ATTRIBUTION-AUDIT.md','docs/PUBLIC-V23-MIT-LICENSE.txt','docs/SUPPLIED-ALPHA1-MIT-LICENSE.txt']
 evidence=['docs/release/FINAL-STEP1-RESULTS-20261029.md','docs/release/FINAL-UI-CHECKS-20261029.md','docs/evidence/archive-provenance.json','docs/evidence/sdk.json','docs/evidence/final-ui-native-20261029/final15-source-receipt.json','docs/evidence/final-ui-native-20261029/final15-native-results.xml','docs/evidence/final-ui-native-20261029/step3-ui-output.txt']
 notice=b'PRIVATE RELEASE CANDIDATE. Licence approved by author on 28 October 2026. Public distribution is not approved. See VALIDATION.md for actual evidence and remaining limits.\n'
+if args.distribution:
+    notice=b'CLEAN - Mod Remover and Holster v3.2 by 2Shay. Windows / .NET Framework 4.8. Keep CLEAN_v3.2.exe and CLEAN_v3.2.exe.config together outside the game folder. Read README.md, LICENSE.txt, THIRD-PARTY-NOTICES.txt, ARTWORK-NOTICE.txt and VALIDATION.md before use.\n'
 def sha(data): return hashlib.sha256(data).hexdigest()
 def pack(path,files):
     members={name:p.read_bytes() for name,p in files}
     assert len(members)==len(files)
-    members['APPROVAL-REQUIRED.txt']=notice
+    members['RELEASE-INFORMATION.txt' if args.distribution else 'APPROVAL-REQUIRED.txt']=notice
     members['SHA256SUMS.txt']=''.join(sha(data)+'  '+name+'\n' for name,data in sorted(members.items())).encode()
     with zipfile.ZipFile(path,'x',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
         for name,data in sorted(members.items()):
@@ -45,7 +48,7 @@ for folder in ['src','tests','.github']:
 for name in ['generate_icon.ps1','prepare_package.py','verify_review_package.py','game_inventory.py','prepare_native_test_volume.ps1']:
     sourcefiles.append(('scripts/'+name,ROOT/'scripts'/name))
 records=[pack(out/'CLEAN-v3.2-binary.zip',binfiles),pack(out/'CLEAN-v3.2-source.zip',sourcefiles)]
-manifest={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'state':'PRIVATE RELEASE CANDIDATE; PUBLIC PUBLICATION NOT APPROVED','exeSHA256':sha(binary),'configSHA256':sha(config.read_bytes()),'sourceFiles':{n:sha(p.read_bytes()) for n,p in sourcefiles},'archives':records}
+manifest={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'state':'DISTRIBUTION-FORMAT REVIEW; UNPUBLISHED; AUTHOR APPROVAL REQUIRED' if args.distribution else 'PRIVATE RELEASE CANDIDATE; PUBLIC PUBLICATION NOT APPROVED','exeSHA256':sha(binary),'configSHA256':sha(config.read_bytes()),'sourceFiles':{n:sha(p.read_bytes()) for n,p in sourcefiles},'archives':records}
 (out/'package-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(out)
 for r in records:print(r['file'],r['bytes'],r['sha256'])
