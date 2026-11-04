@@ -25,7 +25,7 @@ Windows preparation changes:
 - Fix native DPI docking, caption painting, fresh-dialog text sizing and phantom
   horizontal scrollbars. Relevant final checks 190 UI/native 12; actual four scales
   and two common resolutions inspected.
-- Add About/Support with confirmed PayPal link and conditional GTA VI roadmap.
+- Add About/Support with confirmed Ko-fi and PayPal links and conditional GTA VI roadmap.
   Show activity/bytes without misleading whole-operation percentages or ETAs.
 - Correct Windows readonly expectations and explicitly skip Linux-only fixtures.
   Add native safety/fault/recovery/load checks, build docs and local CI setup.

@@ -51,7 +51,8 @@ dotnet build src/RDR2ModHolster.csproj -c Release -t:Rebuild "-p:PathMap=$($PWD.
 ```
 
 The release verification records whether this mapping reproduces both EXE and config.
-The original packaged build predates the Git repository, so the reproduction command
+The original packaged build predates the Git repository, and the Ko-fi build retains
+the same metadata policy, so the reproduction command
 also disables automatic SourceLink/Git metadata. Otherwise a build inside a repository
 can embed its revision/remote and change the hash even with identical production code.
 The forced rebuild avoids reuse of prior compiler outputs. These build settings do not

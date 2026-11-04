@@ -227,15 +227,25 @@ internal static class UiChecks
     }
     private static void AboutCheck(MainForm f)
     {
-        f.SimulateDpi(96);
-        Modal(f, "ShowAbout", new object[0], d =>
+        foreach (int dpi in new[] { 96, 120, 144, 192 })
         {
+            f.SimulateDpi(dpi);
+            Modal(f, "ShowAbout", new object[0], d =>
+            {
             Check(d.Text == "About CLEAN - Mod Remover and Holster", "About title uses CLEAN branding");
             string text = All(d).OfType<RichTextBox>().Single().Text;
             Check(text.Contains("CLEAN for GTA VI is planned, targeting day-one support for the PC release, subject to compatibility testing. Follow development here."), "About keeps conditional roadmap wording");
             Check(text.Contains("Support is voluntary"), "About keeps support separate from access");
-            CheckDialog(d,"about"); Capture(d,"about"); d.DialogResult = DialogResult.Cancel;
-        });
+            CheckDialog(d,"about-" + dpi);
+            Capture(d,"about-" + dpi);
+            d.ClientSize = new Size(400 * dpi / 96, 320 * dpi / 96);
+            Application.DoEvents();
+            CheckDialog(d,"about-compact-" + dpi);
+            Check(d.ActiveControl is Button && ((Button)d.ActiveControl).Text == "Close", "About initially focuses Close at " + dpi + " DPI");
+            Capture(d,"about-compact-" + dpi);
+            d.DialogResult = DialogResult.Cancel;
+            });
+        }
     }
     private static void CheckDialog(Form d, string name)
     {

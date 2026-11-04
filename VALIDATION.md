@@ -1,11 +1,22 @@
 # CLEAN - Mod Remover and Holster — Windows validation
 
-Updated 3 November 2026. Author: 2Shay. Production .NET Framework 4.8; SDK 8.0.427.
+Updated 4 November 2026. Author: 2Shay. Production .NET Framework 4.8; SDK 8.0.427.
 Prepared release materials remain unpublished pending author review. Private repository
 commit 6c30496f659c5c45efe94fea0c825af56de281d2 passed Windows CI run41675459572.
-Documentation/packaging updates after that commit do not change production source/assets.
+The 4 November Ko-fi update changes only the About/Support production file;
+SafetyEngine and operation handlers remain unchanged. The previous CI run covers
+the pre-Ko-fi commit; no new remote CI result is implied.
 
-## Latest source and executable
+## Ko-fi application update - 4 November 2026
+
+Current EXE SHA256: `42fd23b217fb7535c073b2b36f62b60ec7310873fef5671a4fcb2411c76c31fd`. Config remains unchanged.
+Engine38/release21 PASS with four Linux-only skips; UI224 assertions PASS, zero
+warnings/errors. About actions fit at96/120/144/192 simulated DPI and compact
+window sizes; initial Close focus retained. Exact-package native/build/link checks
+are recorded in the companion validation report. Prior game/disk-full evidence
+retains original build labels.
+
+## Previous final15 source and executable
 
 Final15 EXE SHA256:
 `8431b008f7e6207d57c726c984dc12fe7d53b5f501652a032c76572103b2ea9e`

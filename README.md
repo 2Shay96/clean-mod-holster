@@ -47,6 +47,7 @@ current artwork; that decision is not rights-holder permission. CLEAN is opted o
 Nexus Donation Points.
 
 [Support CLEAN through PayPal](https://www.paypal.com/donate/?hosted_button_id=G677UQMTPA5EL).
+[Support 2Shay on Ko-fi](https://ko-fi.com/2shay).
 Support is voluntary and does not buy access, updates, assistance or promised features.
 
 CLEAN for GTA VI is planned, targeting day-one support for the PC release, subject to compatibility testing. Follow development here.
