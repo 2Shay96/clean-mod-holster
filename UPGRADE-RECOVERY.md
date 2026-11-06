@@ -3,15 +3,23 @@
 Keep an independent copy of mods, saves and every existing backup/session folder before
 upgrading. A verified transfer is not a substitute for an independent backup.
 
-Extract CLEAN outside the game installation. Keep the executable and its matching config
-together. Do not run old BAT/v2.3/v3.0 tools against an installation holding new sessions:
-they may treat `_RDR2_ModHolster31` as disposable content. v3.1 understands its own schema,
+Extract the ZIP outside the game installation, then copy only CLEAN_v3.2.exe and its
+matching CLEAN_v3.2.exe.config beside RDR2.exe if preferred. Keep both files together
+when upgrading; close CLEAN before replacing either. Keep guides/notices/source outside
+the game folder. Alternatively, keep the pair elsewhere and put a shortcut to the EXE
+in the game folder (the config stays beside the real EXE).
+Do not run old BAT/v2.3/v3.0 tools against an installation holding new sessions:
+they may treat CLEAN recovery folders as disposable content. v3.1 understands its own schema,
 but does not understand v3.2 manifests. Finish recovery using the version that supports it.
 
 ## Supported backup formats
 
 The engine reads schema 3.1/GUID sessions and schema 3.2/short-ID sessions under
-`_RDR2_ModHolster31`. It also recognises `_RDR2_Mods_Disabled`,
+`_RDR2_ModHolster` and the earlier `_RDR2_ModHolster31`. New sessions use the
+versionless folder; existing sessions stay in place and appear together in Restore.
+Keep both stores when backing up or moving the game. Duplicate session IDs across
+the two stores block recovery rather than choosing or merging a copy. Do not run
+older CLEAN versions alongside this build. It also recognises `_RDR2_Mods_Disabled`,
 `_RDR2_ReShade_Disabled` and `_RDR2_ENB_Disabled`, including their old
 `Documents\modconfig` layout. Legacy backups have no original integrity record: checks
 can verify the bytes present now, not prove that those bytes once launched successfully.

@@ -10,8 +10,14 @@ Portable Windows release.
 See [VALIDATION.md](VALIDATION.md) for actual Windows checks and remaining limits.
 The old Linux/Mono screenshots/results are historical and are not native evidence.
 
-Requires Windows and .NET Framework 4.8. Extract the complete archive outside the game
-folder and keep the executable and matching `.exe.config` together. The build is unsigned.
+Requires Windows and .NET Framework 4.8. Extract the ZIP to read its guides and notices.
+For convenient access, copy **CLEAN_v3.2.exe** and **CLEAN_v3.2.exe.config** together
+beside **RDR2.exe**. CLEAN detects that folder automatically and protects its EXE/config
+from its file operations. Keep the guides, notices and source outside the game folder;
+do not extract the whole ZIP over your game installation.
+Alternatively, keep CLEAN elsewhere and place a shortcut to its EXE in the game folder.
+Keep the matching config beside the real EXE, not beside the shortcut. Use Browse if
+automatic detection does not find your game. The build is unsigned.
 It does not install mods, modify Windows security settings or require elevation.
 
 1. Keep independent backups of saves, mods and existing CLEAN sessions.
@@ -22,8 +28,10 @@ It does not install mods, modify Windows security settings or require elevation.
 6. **Delete** first holsters the selection, then requires a separate typed `DELETE`.
    Cancelling permanent deletion leaves the selection holstered.
 
-Backups, manifests and logs live in `game folder\_RDR2_ModHolster31\`. The name is
-kept for compatibility. Failed staging data is retained and its location is logged.
+Backups, manifests and logs live in `game folder\_RDR2_ModHolster\`. Earlier
+`_RDR2_ModHolster31` sessions remain readable in place; CLEAN does not move or merge them.
+Keep both recovery folders when backing up or moving the game. Failed staging data
+is retained and its location is logged.
 Conflicting live files may be moved into a separate verified session only after review;
 these appear as **Files moved aside** and are recoverable through Restore.
 
@@ -46,9 +54,12 @@ separate third-party material, excluded from the code licence; see
 current artwork; that decision is not rights-holder permission. CLEAN is opted out of
 Nexus Donation Points.
 
-[Support 2Shay on Ko-fi](https://ko-fi.com/2shay).
+[News & Support on Ko-fi](https://ko-fi.com/2shay).
 Support is voluntary and does not buy access, updates, assistance or promised features.
 
-CLEAN for GTA VI is planned, targeting day-one support for the PC release, subject to compatibility testing. Follow development here.
+CLEAN for GTA VI is planned, targeting day-one support for the PC release, subject to compatibility testing. Follow development on Ko-fi.
 
-[Follow development](https://www.nexusmods.com/reddeadredemption2/mods/8084?tab=articles).
+[Follow development on Ko-fi](https://ko-fi.com/2shay).
+
+[Source & Issues on GitHub](https://github.com/2Shay96/clean-mod-holster).
+Development news is posted on Ko-fi; finished releases and technical issues are on GitHub.

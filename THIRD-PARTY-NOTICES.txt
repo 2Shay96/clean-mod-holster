@@ -1,7 +1,6 @@
 CLEAN - Mod Remover and Holster — notices and provenance
 
 New v3.2 licence: author-approved source-available terms in LICENSE.txt (28 October 2026).
-This private review copy is not authorised for public distribution.
 The embedded RDR2 header artwork is separately identified in ARTWORK-NOTICE.txt;
 the code licence grants no additional rights in that artwork.
 
@@ -69,7 +68,6 @@ Magnify 1 icon (Anonymous) and reload icon (mlampret) declare public-domain
 status in supplied SVG metadata. Trash can icon is published by OpenClipart at
 https://freesvg.org/trash-can-icon under the site's Public Domain / CC0 terms:
 https://creativecommons.org/publicdomain/zero/1.0/ . Author confirmed that source.
-Current build remains a private preview; public publication is not approved.
 
 Build dependencies: Microsoft.NETFramework.ReferenceAssemblies.net48 1.0.3;
 Microsoft .NET 8 SDK. Neither is bundled. Production uses the Windows .NET

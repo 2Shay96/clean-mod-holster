@@ -330,7 +330,7 @@ namespace RDR2ModHolster
             {
                 Status(operation + " complete — " + result.Message); Activity("✔ " + operation + " complete"); LogOk("  " + operation + " complete: " + result.Message); if (!String.IsNullOrEmpty(result.SessionId)) LogDim("  Session: " + result.SessionId); ShowNotes(result.Notes);
                 string noteText = result.Notes.Count == 0 ? "" : "\n\nNotes:\n" + String.Join("\n", result.Notes.Select(n => "• " + n));
-                ShowInfo(operation + " complete", result.Message + (String.IsNullOrEmpty(result.SessionId) ? "" : "\n\nSession folder:\n" + Path.Combine(_game, "_RDR2_ModHolster31", result.SessionId)) + noteText);
+                ShowInfo(operation + " complete", result.Message + (String.IsNullOrEmpty(result.SessionPath) ? "" : "\n\nSession folder:\n" + result.SessionPath) + noteText);
             }
             else ShowFailure(operation, result.Message, result.Errors);
         }
@@ -338,7 +338,7 @@ namespace RDR2ModHolster
         private void ShowFailure(string operation, string message, IEnumerable<string> errors)
         {
             string details = errors == null ? "" : String.Join("\n", errors.Where(e => !String.IsNullOrWhiteSpace(e) && e != message).Distinct());
-            string backup = String.IsNullOrEmpty(_game) ? "" : "\n\nSafety log location: " + Path.Combine(_game, "_RDR2_ModHolster31");
+            string backup = String.IsNullOrEmpty(_game) ? "" : "\n\nSafety log location: " + Path.Combine(_game, SafetyEngine.RecoveryFolderName);
             string advice = "\n\nKeep the session folder and independent backups. Close programs that may change these files, then use Restore to recover an interrupted transfer. If recovery reports a conflict, inspect it before moving anything aside.";
             Status(operation + " failed — " + message); Activity("✘ " + operation + " failed"); LogError("  " + operation + " failed: " + message); if (!String.IsNullOrEmpty(details)) LogError("  " + details);
             ShowTextDialog(operation + " failed", message + (String.IsNullOrEmpty(details) ? "" : "\n\n" + details) + backup + advice, false, true);

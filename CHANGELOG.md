@@ -9,6 +9,12 @@ guards and conditional LML NLog recognition.
 
 Windows preparation changes:
 
+- Support the portable EXE/config pair beside RDR2.exe: detect the adjacent game and
+  protect CLEAN's runtime config during scan, recovery and conflict resolution.
+  Keep unrelated mod configs selectable. Document the alternative shortcut setup.
+- Use the versionless `_RDR2_ModHolster` recovery folder for new sessions. Existing
+  `_RDR2_ModHolster31` sessions remain recoverable in place; both stores are protected
+  and locked during operations. Duplicate session IDs are refused without merging.
 - Re-read/checksum staged bytes before commit; verify restored destinations and
   remaining backups before backup removal. Reject file/directory case aliases;
   use a path dictionary for large inventories.
@@ -35,3 +41,6 @@ Windows preparation changes:
 Actual Windows results, build identities and earlier Steam/LML/Script Hook game
 evidence: VALIDATION.md. Historical crashes are not proven fixed. No Online or ban
 safety claim. Exact-package checks and remaining limits are recorded in the accompanying validation report.
+
+### Development links
+- About now clearly labels News & Support on Ko-fi and Source & Issues on GitHub. GTA VI news points to Ko-fi; support remains voluntary.

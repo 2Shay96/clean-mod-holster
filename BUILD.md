@@ -15,7 +15,7 @@ The script uses the private `.dotnet/` SDK if present, otherwise `dotnet` from P
 Install the .NET 8 SDK from Microsoft if it is not already available; the SDK is not
 bundled. The build-only reference assemblies restore through NuGet. No Git history is
 required to build the source snapshot. Repository: https://github.com/2Shay96/clean-mod-holster.
-The repository remains private until the author approves public source publication.
+The source is licensed under LICENSE.txt; public visibility does not make it open source.
 
 Output: `src/bin/Release/net48/CLEAN_v3.2.exe` and its matching `.exe.config`.
 Keep them together. Version 3.2.0.0 / informational version 3.2.0 identifies this v3.2 build.
@@ -39,21 +39,24 @@ Old `UI-CHANGES.md` assertions about v3.1 and byte-identical safety code are sup
 The modified release test now checks the intended v3.2 read-only roundtrip rather than
 the old expectation of failure. That is a test correction, not removal of protection.
 
-## Reproducing the packaged executable
+## Source builds and exact executable identity
 
-Ordinary builds include the source location in deterministic debug/compiler paths,
-so building from a different directory can change the executable hash. This was
-observed and documented, rather than treated as an unexplained binary difference.
-To reproduce this package's exact bytes from a relocated source snapshot, build with:
+The matching source ZIP builds without Git history using the commands above. A normal
+build from another directory or Git context can have a different SHA-256 because the
+compiler embeds deterministic source paths and automatic Git/SourceLink metadata.
+Use the release archive checksums to identify the distributed executable.
+
+For the 6 November local candidate, the extracted source rebuild matched both EXE and
+config with the same parent Git context (0c85b740214fa183bb4dcb69361b6a7a89edd557)
+and this source-path mapping, without disabling automatic SourceLink metadata:
 
 ```powershell
-dotnet build src/RDR2ModHolster.csproj -c Release -t:Rebuild "-p:PathMap=$($PWD.Path)=C:\Users\Shadow\Desktop\VibeCoding\clean-mod-holster" -p:EnableSourceControlManagerQueries=false -p:EnableSourceLink=false
+dotnet build src/RDR2ModHolster.csproj -c Release -t:Rebuild "-p:PathMap=$($PWD.Path)=C:\Users\Shadow\Desktop\VibeCoding\clean-mod-holster"
 ```
 
-The release verification records whether this mapping reproduces both EXE and config.
-The original packaged build predates the Git repository, and the Ko-fi build retains
-the same metadata policy, so the reproduction command
-also disables automatic SourceLink/Git metadata. Otherwise a build inside a repository
-can embed its revision/remote and change the hash even with identical production code.
-The forced rebuild avoids reuse of prior compiler outputs. These build settings do not
-redirect application data or change runtime behaviour.
+That byte-for-byte result is specific to the recorded source-path/Git context, not a
+promise that an independent checkout or standalone ZIP build has the same debug
+identity. An earlier attempt that disabled Git/SourceLink queries produced different
+bytes and is retained in the evidence. The versionless-folder and About updates use
+the ordinary build policy. A new commit/rebuild receives fresh hashes and matching
+package checks. Source-path mapping does not redirect application data.

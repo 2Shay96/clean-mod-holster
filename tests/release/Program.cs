@@ -44,6 +44,7 @@ internal static class Program
             ("ReShade and ENB groups/proxy companion evidence are separate", GroupAndProxyEvidence),
             ("unknown explicitly selected item roundtrips", ExplicitUnknownAndUnicode),
             ("fresh scan rejects forged protected Candidate", ForgedProtectedCandidate),
+            ("portable CLEAN config protected without excluding mod configs", PortableConfig),
             ("restore collision preflight leaves every prior item untouched", RestoreCollisionPreflight),
             ("repeated holster refuses and preserves prior backup", RepeatedHolster),
             ("nested link failure leaves no orphan session and clean retry works", NestedLinkNoOrphan),
@@ -92,6 +93,21 @@ internal static class Program
         Console.WriteLine("RESULT pass=" + passed + " skip=" + skipped + " fail=" + failed + " report=" + reportPath);
         try { Directory.Delete(Base, true); } catch { }
         Environment.ExitCode = failed == 0 ? 0 : 1;
+    }
+
+    static void PortableConfig()
+    {
+        using (var f = new Fixture("portable-config"))
+        {
+            string config = Path.Combine(f.Game, "CLEAN_v3.2.exe.config");
+            File.WriteAllText(config, "runtime settings");
+            File.WriteAllText(Path.Combine(f.Game, "my-mod.config"), "mod settings");
+            var e = f.Engine();
+            Assert(Pick(e, "CLEAN_v3.2.exe.config").Protected, "CLEAN config is selectable");
+            Assert(!Pick(e, "my-mod.config").Protected, "unrelated mod config excluded");
+            var result = e.Holster(ModGroup.Mods, new[] { new Candidate { Name = "CLEAN_v3.2.exe.config", FullPath = config, Group = ModGroup.Mods } });
+            Assert(!result.Success && File.ReadAllText(config) == "runtime settings", "forged config selection moved runtime settings");
+        }
     }
 
     static void RoundTrip()
@@ -240,7 +256,7 @@ internal static class Program
     {
         using (var f = new Fixture("lock"))
         {
-            File.WriteAllText(Path.Combine(f.Game, "held.asi"), "held"); var e = f.Engine(); string lockPath = Path.Combine(f.Game, "_RDR2_ModHolster31", "operation.lock");
+            File.WriteAllText(Path.Combine(f.Game, "held.asi"), "held"); var e = f.Engine(); string lockPath = Path.Combine(f.Game, "_RDR2_ModHolster", "operation.lock");
             using (var held = new FileStream(lockPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
             {
                 var r = e.Holster(ModGroup.Mods, new[] { Pick(e, "held.asi") }); Assert(!r.Success, "external operation lock was ignored");
@@ -257,7 +273,7 @@ internal static class Program
             using (var f = new Fixture("manifest-" + Math.Abs(edit.GetHashCode())))
             {
                 File.WriteAllText(Path.Combine(f.Game, "x.asi"), "x"); var e = f.Engine(); var h = Require(e.Holster(ModGroup.Mods, new[] { Pick(e, "x.asi") }));
-                string path = Path.Combine(f.Game, "_RDR2_ModHolster31", h.SessionId, "manifest.xml"); var doc = XDocument.Load(path); var root = doc.Root;
+                string path = Path.Combine(f.Game, "_RDR2_ModHolster", h.SessionId, "manifest.xml"); var doc = XDocument.Load(path); var root = doc.Root;
                 if (edit == "unknown-record") root.Add(new XElement("Unknown", new XAttribute("x", "1")));
                 else root.Elements("Item").Single().SetAttributeValue("name", edit);
                 doc.Save(path); var r = e.Restore(h.SessionId);
@@ -346,7 +362,7 @@ internal static class Program
         using (var f = new Fixture("partial-source"))
         {
             string d = Path.Combine(f.Game, "scripts"); Directory.CreateDirectory(d); File.WriteAllText(Path.Combine(d, "a.asi"), "a"); File.WriteAllText(Path.Combine(d, "b.asi"), "b");
-            var e = f.Engine(); var h = Require(e.Holster(ModGroup.Mods, new[] { Pick(e, "scripts") })); string session = Path.Combine(f.Game, "_RDR2_ModHolster31", h.SessionId);
+            var e = f.Engine(); var h = Require(e.Holster(ModGroup.Mods, new[] { Pick(e, "scripts") })); string session = Path.Combine(f.Game, "_RDR2_ModHolster", h.SessionId);
             Directory.CreateDirectory(d); File.WriteAllText(Path.Combine(d, "a.asi"), "a"); SetManifestState(Path.Combine(session, "manifest.xml"), "Restoring", "Restoring");
             Require(e.Restore(h.SessionId)); Assert(File.Exists(Path.Combine(d, "a.asi")) && File.Exists(Path.Combine(d, "b.asi")), "partial active source was not reconstructed");
         }
@@ -359,7 +375,7 @@ internal static class Program
             string d = Path.Combine(f.Game, "scripts"); Directory.CreateDirectory(d); File.WriteAllText(Path.Combine(d, "a.asi"), "a"); File.WriteAllText(Path.Combine(d, "b.asi"), "b");
             var e = f.Engine(); var h = Require(e.Holster(ModGroup.Mods, new[] { Pick(e, "scripts") })); string backup = SessionItem(f, h.SessionId, "Game", "scripts");
             Directory.CreateDirectory(d); File.Copy(Path.Combine(backup, "a.asi"), Path.Combine(d, "a.asi")); File.Copy(Path.Combine(backup, "b.asi"), Path.Combine(d, "b.asi")); File.Delete(Path.Combine(backup, "a.asi"));
-            SetManifestState(Path.Combine(f.Game, "_RDR2_ModHolster31", h.SessionId, "manifest.xml"), "Restoring", "Restoring"); Require(e.Restore(h.SessionId)); Assert(!Directory.Exists(backup), "verified partial backup was not completed");
+            SetManifestState(Path.Combine(f.Game, "_RDR2_ModHolster", h.SessionId, "manifest.xml"), "Restoring", "Restoring"); Require(e.Restore(h.SessionId)); Assert(!Directory.Exists(backup), "verified partial backup was not completed");
         }
     }
 
@@ -369,7 +385,7 @@ internal static class Program
         {
             File.WriteAllText(Path.Combine(f.Game, "x.asi"), "x"); var e = f.Engine(); var h = Require(e.Holster(ModGroup.Mods, new[] { Pick(e, "x.asi") }));
             string backup = SessionItem(f, h.SessionId, "Game", "x.asi"); File.Copy(backup, Path.Combine(f.Game, "x.asi")); File.Delete(backup);
-            SetManifestState(Path.Combine(f.Game, "_RDR2_ModHolster31", h.SessionId, "manifest.xml"), "Holstering", "Copying");
+            SetManifestState(Path.Combine(f.Game, "_RDR2_ModHolster", h.SessionId, "manifest.xml"), "Holstering", "Copying");
             var r = e.Restore(h.SessionId); Assert(r.Success, "intact active source after precommit interruption was not recoverable: " + r.Message); Assert(File.Exists(Path.Combine(f.Game, "x.asi")), "intact source was lost");
         }
     }
@@ -379,7 +395,7 @@ internal static class Program
         using (var f = new Fixture("purging"))
         {
             File.WriteAllText(Path.Combine(f.Game, "x.asi"), "x"); var e = f.Engine(); var h = Require(e.Holster(ModGroup.Mods, new[] { Pick(e, "x.asi") }));
-            string manifest = Path.Combine(f.Game, "_RDR2_ModHolster31", h.SessionId, "manifest.xml"); SetManifestState(manifest, "Purging", "BackedUp");
+            string manifest = Path.Combine(f.Game, "_RDR2_ModHolster", h.SessionId, "manifest.xml"); SetManifestState(manifest, "Purging", "BackedUp");
             Assert(!e.Restore(h.SessionId).Success, "Purging session was restorable"); var r = e.Purge(h.SessionId); Assert(r.Success, "verified retry of Purging did not complete: " + r.Message);
         }
     }
@@ -432,10 +448,10 @@ internal static class Program
     static Candidate Find(List<Candidate> items, string name) => items.FirstOrDefault(x => x.Name == name) ?? throw new Exception("candidate not found: " + name);
     static OperationResult Require(OperationResult r) { if (!r.Success) throw new Exception(r.Message); return r; }
     static void Assert(bool condition, string message) { if (!condition) throw new Exception(message); }
-    static string SessionItem(Fixture f, string id, string ns, string name) => Path.Combine(f.Game, "_RDR2_ModHolster31", id, ns, name.Replace('/', Path.DirectorySeparatorChar));
+    static string SessionItem(Fixture f, string id, string ns, string name) => Path.Combine(f.Game, "_RDR2_ModHolster", id, ns, name.Replace('/', Path.DirectorySeparatorChar));
     static IEnumerable<string> SessionDirectories(Fixture f)
     {
-        string store = Path.Combine(f.Game, "_RDR2_ModHolster31");
+        string store = Path.Combine(f.Game, "_RDR2_ModHolster");
         return Directory.Exists(store) ? Directory.GetDirectories(store).Where(x => !new[] { "logs", ".staging" }.Contains(Path.GetFileName(x), StringComparer.OrdinalIgnoreCase)) : Enumerable.Empty<string>();
     }
     static void SetManifestState(string path, string sessionState, string itemState)

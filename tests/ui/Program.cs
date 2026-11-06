@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -184,7 +184,7 @@ internal static class UiChecks
         var r = new OperationResult { Success = false, Message = "Restore blocked" };
         r.Conflicts.Add(new RestoreConflict { Name = "lml", Path = @"E:\Games\Red Dead Redemption 2\lml", Reason = "A file or folder with this name already exists in the game folder.", CanMoveAside = true });
         r.Conflicts.Add(new RestoreConflict { Name = "vfs.asi", Path = @"E:\Games\Red Dead Redemption 2\vfs.asi", Reason = "Different content of this name is in the game folder.", CanMoveAside = true });
-        if (!allMovable) r.Conflicts.Add(new RestoreConflict { Name = "ScriptHookRDR2.dll", Path = @"E:\Games\Red Dead Redemption 2\_RDR2_ModHolster31", Reason = "The backup copy is incomplete.", CanMoveAside = false });
+        if (!allMovable) r.Conflicts.Add(new RestoreConflict { Name = "ScriptHookRDR2.dll", Path = @"E:\Games\Red Dead Redemption 2\_RDR2_ModHolster", Reason = "The backup copy is incomplete.", CanMoveAside = false });
         return r;
     }
     private static void ConflictCheck(MainForm f, int dpi, string name, bool allMovable)
@@ -234,8 +234,10 @@ internal static class UiChecks
             {
             Check(d.Text == "About CLEAN - Mod Remover and Holster", "About title uses CLEAN branding");
             string text = All(d).OfType<RichTextBox>().Single().Text;
-            Check(text.Contains("CLEAN for GTA VI is planned, targeting day-one support for the PC release, subject to compatibility testing. Follow development here."), "About keeps conditional roadmap wording");
+            Check(text.Contains("CLEAN for GTA VI is planned, targeting day-one support for the PC release, subject to compatibility testing. Follow development on Ko-fi."), "About keeps conditional roadmap wording");
             Check(text.Contains("Support is voluntary"), "About keeps support separate from access");
+            Check(All(d).OfType<Button>().Any(b => b.Text == "News & Support on Ko-fi"), "About labels the news and support destination");
+            Check(All(d).OfType<Button>().Any(b => b.Text == "Source & Issues on GitHub"), "About labels the source and issue destination");
             CheckDialog(d,"about-" + dpi);
             Capture(d,"about-" + dpi);
             d.ClientSize = new Size(400 * dpi / 96, 320 * dpi / 96);

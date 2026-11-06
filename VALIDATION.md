@@ -1,13 +1,52 @@
 # CLEAN - Mod Remover and Holster — Windows validation
 
-Updated 4 November 2026. Author: 2Shay. Production .NET Framework 4.8; SDK 8.0.427.
+Updated 6 November 2026. Author: 2Shay. Production .NET Framework 4.8; SDK 8.0.427.
 Prepared release materials remain unpublished pending author review. Private repository
 commit 6c30496f659c5c45efe94fea0c825af56de281d2 passed Windows CI run41675459572.
 The 4 November Ko-fi update changes only the About/Support production file;
 SafetyEngine and operation handlers remain unchanged. The previous CI run covers
 the pre-Ko-fi commit; no new remote CI result is implied.
 
-## Ko-fi-only application update - 4 November 2026
+## Portable placement — current local candidate, 6 November 2026
+
+The engine now protects CLEAN's companion config in all file-operation routes.
+Current Windows build: engine38/release22 PASS, four Linux-only skips; UI232 PASS.
+Production native portable17 and focused native8 checks PASS. See
+[portable checks](docs/release/PORTABLE-FOLDER-CHECKS-20261106.md) for hash/evidence,
+retained harness failures, installation guidance and limits. Current changes have
+not been committed or run in remote CI; base0c85b74 CI passed previously.
+
+The sections below record earlier candidates, not fresh evidence for this executable.
+
+## News and source links - 6 November 2026
+
+Earlier news-links EXE SHA256: `750ecb56586451e5dbc824d3e55b51983195484cbb763d4678d1e0fe1d1625c8`.
+About now links News & Support on Ko-fi and Source & Issues on GitHub. The conditional
+GTA VI roadmap directs readers to Ko-fi. Only MainForm.About.cs changed in production
+since the versionless-folder regression below. Engine38/release21 PASS, four Linux-only
+skips; UI232 assertions PASS, including compact and96/120/144/192 DPI About layouts.
+The first build attempt could not replace the open preview EXE; it was closed normally
+and the retry built with zero warnings/errors. Both logs are retained under
+`docs/evidence/news-links-20261106/`. Exact-package native checks and source comparison
+are recorded in the companion report. Earlier game/disk-full results keep their own
+build identities. No remote CI result is claimed for these uncommitted changes.
+
+## Versionless recovery folder - 6 November 2026
+
+New sessions use `_RDR2_ModHolster`; earlier `_RDR2_ModHolster31` sessions remain
+recoverable in place. This update changes the safety engine and operation-result
+paths, so the following are new local regression results rather than inherited claims.
+
+Previous versionless-folder EXE SHA256: `a99abf03bddb84f2e1de3b05969e4b996bc9cb2695d9efdc2515dcdf3c1d823d`.
+Engine38/release21 PASS, four Linux-only skips; UI224 PASS, zero build warnings/errors.
+Extended20 and native production-EXE16 PASS, plus final5 focused cases on each runtime.
+Both full suites include10,000-file hash roundtrips. Final focused cases cover old-store
+schema3.1 recovery/locks, dual stores, duplicate IDs, interruptions, purge and junctions.
+See `docs/release/RECOVERY-FOLDER-CHECKS-20261106.md` and companion package report.
+No current real-game, genuine disk-full or remote CI rerun is implied. Prior Ko-fi-only
+build hashes/results below are historical. Existing artwork and environment limits remain.
+
+## Previous Ko-fi-only application update - 4 November 2026
 
 At the author's request, the PayPal button and destination constant have been removed.
 Ko-fi is the only donation link; Follow development and Close remain. The new build
@@ -15,7 +54,7 @@ again passed engine38/release21/UI224 with four Linux-only skips. Earlier 13-cas
 native results belong to the preceding Ko-fi-plus-PayPal executable; current focused
 packaged checks are identified separately in the companion report.
 
-Current EXE SHA256: `5341a8933eb4047664a84136309d832b2ab82533a7538330fbbfc90ccdd6c95f`. Config remains unchanged.
+Previous EXE SHA256: `5341a8933eb4047664a84136309d832b2ab82533a7538330fbbfc90ccdd6c95f`. Config remains unchanged.
 Engine38/release21 PASS with four Linux-only skips; UI224 assertions PASS, zero
 warnings/errors. About actions fit at96/120/144/192 simulated DPI and compact
 window sizes; initial Close focus retained. Exact-package native/build/link checks

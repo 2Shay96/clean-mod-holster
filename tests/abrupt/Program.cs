@@ -37,7 +37,7 @@ internal static class Program
             worker.Kill();worker.WaitForExit();
         }
         if(Hash(payload)!=before)throw new Exception("Abrupt kill changed the original.");
-        string store=Path.Combine(game,"_RDR2_ModHolster31");string manifest=Directory.GetFiles(store,"manifest.xml",SearchOption.AllDirectories).Single();
+        string store=Path.Combine(game,"_RDR2_ModHolster");string manifest=Directory.GetFiles(store,"manifest.xml",SearchOption.AllDirectories).Single();
         var recorded=XDocument.Load(manifest);string id=(string)recorded.Root.Attribute("id");
         if((string)recorded.Root.Attribute("state")!="Holstering")throw new Exception("No interrupted journal state.");
         var restarted=new SafetyEngine(game,docs,null);var recovery=restarted.Restore(id);if(!recovery.Success)throw new Exception(recovery.Message);

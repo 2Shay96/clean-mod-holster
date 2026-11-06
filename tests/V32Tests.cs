@@ -52,7 +52,7 @@ static class V32
     static void Yes(OperationResult r) { if (!r.Success) throw new Exception("unexpected failure: " + r.Message); }
     static void No(OperationResult r, string why) { if (r.Success) throw new Exception("expected refusal: " + why); }
     static void True(bool condition, string why) { if (!condition) throw new Exception(why); }
-    static string Store(string f) { return Path.Combine(f, "game", "_RDR2_ModHolster31"); }
+    static string Store(string f) { return Path.Combine(f, "game", "_RDR2_ModHolster"); }
     static string ManifestPath(string f, string id) { return Path.Combine(Store(f), id, "manifest.xml"); }
     static string Game(string f, params string[] parts) { return Path.Combine(new[] { f, "game" }.Concat(parts).ToArray()); }
 

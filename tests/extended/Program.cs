@@ -31,8 +31,8 @@ internal static class ExtendedTests
         }
         public SafetyEngine Engine() { return new SafetyEngine(Game, Docs, null); }
         public string File(string name, string text = "original") { string p = Path.Combine(Game,name); Directory.CreateDirectory(Path.GetDirectoryName(p)); System.IO.File.WriteAllText(p,text); return p; }
-        public string Manifest(string id) { return Path.Combine(Game,"_RDR2_ModHolster31", id, "manifest.xml"); }
-        public string Backup(string id, string name) { return Path.Combine(Game,"_RDR2_ModHolster31", id, "Game",name); }
+        public string Manifest(string id) { return Path.Combine(Game,"_RDR2_ModHolster", id, "manifest.xml"); }
+        public string Backup(string id, string name) { return Path.Combine(Game,"_RDR2_ModHolster", id, "Game",name); }
     }
     static int Main(string[] args)
     {
@@ -46,6 +46,10 @@ internal static class ExtendedTests
         Base = Path.GetFullPath(args.Length > 0 ? args[0] : Path.Combine(Path.GetTempPath(),"CLEAN-disposable-"+Guid.NewGuid().ToString("N")));
         Directory.CreateDirectory(Base);
         Filter = args.Length > 1 ? args[1] : null;
+        Run("versionless store restores old sessions, honours old locks and preserves conflicts", PreviousStoreRecovery);
+        Run("versionless and previous stores list distinct sessions together", BothStores);
+        Run("versionless store refuses duplicate session identities without changes", DuplicateStores);
+        Run("versionless store resumes interrupted previous sessions and purges reviewed backups", PreviousStoreInterruptedAndPurge);
         Run("native readonly roundtrip, locked source and lock retry", Locks);
         Run("denied read access stops safely; restoring ACL permits retry", DeniedRead);
         Run("unreadable and missing manifests preserve backup", UnreadableManifest);
@@ -80,6 +84,77 @@ internal static class ExtendedTests
         Results.Add(new XElement("test",new XAttribute("name",name),new XAttribute("status",status),new XAttribute("ms",sw.ElapsedMilliseconds),detail));
     }
     static Candidate Pick(SafetyEngine e,string n) {return e.Scan().Items.Single(x=>x.Name==n);}
+    static string PreviousStore(Fixture f) { return Path.Combine(f.Game, "_RDR2_ModHolster31"); }
+    static void MoveStoreToPrevious(Fixture f)
+    {
+        Directory.Move(Path.Combine(f.Game, SafetyEngine.RecoveryFolderName), PreviousStore(f));
+    }
+    static void PreviousStoreRecovery()
+    {
+        var f = new Fixture("previous-store"); string live = f.File("x.asi", "original mod");
+        var e = f.Engine(); var h = Yes(e.Holster(ModGroup.Mods, new[] { Pick(e, "x.asi") }));
+        MoveStoreToPrevious(f);
+        string record = Path.Combine(PreviousStore(f), h.SessionId, "manifest.xml");
+        var manifest = XDocument.Load(record); manifest.Root.SetAttributeValue("schema", "3.1"); manifest.Root.Attribute("kind").Remove(); manifest.Save(record);
+        e = f.Engine();
+        Check(e.BackupRoot == Path.Combine(f.Game, "_RDR2_ModHolster"), "new store still versioned");
+        Check(!e.Scan().Items.Any(x => x.Name.StartsWith("_RDR2_ModHolster", StringComparison.OrdinalIgnoreCase)), "recovery stores exposed as scan candidates");
+        Check(e.GetSessions(ModGroup.Mods).Single().Folder == Path.Combine(PreviousStore(f), h.SessionId), "previous session missing");
+        string other = f.File("other.asi", "keep");
+        Check(!e.Holster(ModGroup.Mods, new[] { Pick(e, "other.asi") }).Success && System.IO.File.ReadAllText(other) == "keep", "old active session ignored");
+        using (var held = new FileStream(Path.Combine(PreviousStore(f), "operation.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+            Check(!e.Restore(h.SessionId).Success && !System.IO.File.Exists(live), "previous store lock ignored");
+        System.IO.File.WriteAllText(live, "reinstalled mod");
+        Check(!e.Restore(h.SessionId).Success && System.IO.File.ReadAllText(live) == "reinstalled mod", "previous restore overwrote conflict");
+        var aside = Yes(e.MoveConflictsAside(h.SessionId));
+        Check(aside.SessionPath == Path.Combine(e.BackupRoot, aside.SessionId), "new moved-aside path incorrect");
+        var restored = Yes(e.Restore(h.SessionId));
+        Check(restored.SessionPath == Path.Combine(PreviousStore(f), h.SessionId), "UI reports wrong previous-session path");
+        Check(System.IO.File.ReadAllText(live) == "original mod", "previous payload not restored");
+        // Free the destination by holstering, then recover the reinstalled copy.
+        Yes(e.Holster(ModGroup.Mods, new[] { Pick(e, "x.asi") }));
+        Yes(e.Restore(aside.SessionId));
+        Check(System.IO.File.ReadAllText(live) == "reinstalled mod", "moved-aside payload lost");
+    }
+    static void BothStores()
+    {
+        var f = new Fixture("both-stores"); f.File("x.asi", "old");
+        var e = f.Engine(); var old = Yes(e.Holster(ModGroup.Mods, new[] { Pick(e, "x.asi") })); MoveStoreToPrevious(f);
+        f.File("ReShade.ini", "new"); e = f.Engine();
+        var current = Yes(e.Holster(ModGroup.ReShade, new[] { Pick(e, "ReShade.ini") }));
+        Check(e.GetSessions(ModGroup.Mods).Single().Id == old.SessionId && e.GetSessions(ModGroup.ReShade).Single().Id == current.SessionId, "one store hidden");
+        Yes(e.Restore(old.SessionId)); Yes(e.Restore(current.SessionId));
+        Check(System.IO.File.ReadAllText(Path.Combine(f.Game, "x.asi")) == "old" && System.IO.File.ReadAllText(Path.Combine(f.Game, "ReShade.ini")) == "new", "dual-store bytes changed");
+    }
+    static void DuplicateStores()
+    {
+        var f = new Fixture("duplicate-stores"); string live = f.File("x.asi", "original");
+        var e = f.Engine(); var h = Yes(e.Holster(ModGroup.Mods, new[] { Pick(e, "x.asi") }));
+        string source = Path.Combine(e.BackupRoot, h.SessionId), copy = Path.Combine(PreviousStore(f), h.SessionId);
+        foreach (string path in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
+        {
+            string target = Path.Combine(copy, path.Substring(source.Length + 1)); Directory.CreateDirectory(Path.GetDirectoryName(target)); System.IO.File.Copy(path, target);
+        }
+        string before = Inventory(source) + Inventory(copy);
+        Check(!e.Restore(h.SessionId).Success && !e.Purge(h.SessionId).Success, "ambiguous session acted upon");
+        bool refused = false; try { e.GetSessions(ModGroup.Mods); } catch (IOException) { refused = true; }
+        Check(refused && !System.IO.File.Exists(live) && before == Inventory(source) + Inventory(copy), "duplicate copies changed or hidden");
+    }
+    static void PreviousStoreInterruptedAndPurge()
+    {
+        var f = new Fixture("previous-interrupted"); string live = f.File("x.asi", "retained bytes");
+        var e = f.Engine(); var h = Yes(e.Holster(ModGroup.Mods, new[] { Pick(e, "x.asi") })); MoveStoreToPrevious(f);
+        string record = Path.Combine(PreviousStore(f), h.SessionId, "manifest.xml");
+        var manifest = XDocument.Load(record); manifest.Root.SetAttributeValue("state", "Restoring");
+        foreach (var item in manifest.Root.Elements("Item")) item.SetAttributeValue("state", "Restoring"); manifest.Save(record);
+        e = f.Engine(); Yes(e.Restore(h.SessionId)); Check(System.IO.File.ReadAllText(live) == "retained bytes", "previous interrupted restore lost bytes");
+        var p = new Fixture("previous-purge"); string purgeLive = p.File("x.asi", "disposable purge payload"); string keep = p.File("keep.txt", "untouched");
+        e = p.Engine(); h = Yes(e.Holster(ModGroup.Mods, new[] { Pick(e, "x.asi") })); MoveStoreToPrevious(p); e = p.Engine();
+        var result = Yes(e.Purge(h.SessionId));
+        Check(result.SessionPath == Path.Combine(PreviousStore(p), h.SessionId) && !System.IO.File.Exists(purgeLive) &&
+            !System.IO.File.Exists(Path.Combine(result.SessionPath, "Game", "x.asi")) && System.IO.File.ReadAllText(keep) == "untouched" &&
+            !e.GetSessions(ModGroup.Mods).Any(), "previous purge changed unrelated data or left active payload");
+    }
     static OperationResult Yes(OperationResult r) {if(!r.Success)throw new Exception(r.Message);return r;}
     static void Check(bool v,string why) {if(!v)throw new Exception(why);}
     static string Hash(string p) {using(var sha=SHA256.Create())using(var s=System.IO.File.OpenRead(p))return BitConverter.ToString(sha.ComputeHash(s)).Replace("-","");}
@@ -150,6 +225,10 @@ internal static class ExtendedTests
         string rootLink=Path.Combine(f.Root,"root-link");psi.Arguments="/d /c mklink /J \""+rootLink+"\" \""+f.Game+"\"";
         using(var p=Process.Start(psi)){p.StandardOutput.ReadToEnd();p.StandardError.ReadToEnd();p.WaitForExit();Check(p.ExitCode==0,"root junction creation failed");}
         try{bool refused=false;try{new SafetyEngine(rootLink,f.Docs,null);}catch(IOException){refused=true;}Check(refused,"linked root accepted");}finally{Directory.Delete(rootLink,false);}
+        string previousLink = PreviousStore(f); psi.Arguments="/d /c mklink /J \""+previousLink+"\" \""+outside+"\"";
+        using(var p=Process.Start(psi)){p.StandardOutput.ReadToEnd();p.StandardError.ReadToEnd();p.WaitForExit();Check(p.ExitCode==0,"previous-store junction creation failed");}
+        try{bool refused=false;try{f.Engine().Scan();}catch(IOException){refused=true;}Check(refused,"previous-store junction accepted");Check(System.IO.File.ReadAllText(Path.Combine(outside,"keep.txt"))=="external fixture","previous-store link changed target");}
+        finally{Directory.Move(previousLink, Path.Combine(f.Root,"retained-previous-store-junction"));}
     }
     static void ChangedAfterScan()
     {
@@ -158,7 +237,7 @@ internal static class ExtendedTests
     static void SeparateProcessLock()
     {
         var f=new Fixture("multiprocess");f.File("x.asi");var e=f.Engine();var h=Yes(e.Holster(ModGroup.Mods,new[]{Pick(e,"x.asi")}));
-        using(var held=new FileStream(Path.Combine(f.Game,"_RDR2_ModHolster31","operation.lock"),FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None))Check(Child(f,h.SessionId)!=0,"other process ignored lock");
+        using(var held=new FileStream(Path.Combine(f.Game,"_RDR2_ModHolster","operation.lock"),FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None))Check(Child(f,h.SessionId)!=0,"other process ignored lock");
         Check(System.IO.File.ReadAllText(f.Backup(h.SessionId,"x.asi"))=="original","lock discarded backup");Yes(e.Restore(h.SessionId));
     }
     static int Child(Fixture f,string id)
@@ -199,7 +278,7 @@ internal static class ExtendedTests
 #if HOLSTER_TESTS
     static void StageCorruption()
     {
-        var f=new Fixture("stage-corruption");string p=f.File("x.asi");var e=f.Engine();SafetyEngine.FaultInjector=point=>{if(point=="AfterStageCopy")foreach(string stage in Directory.GetFiles(Path.Combine(f.Game,"_RDR2_ModHolster31"),"x.asi",SearchOption.AllDirectories))System.IO.File.WriteAllText(stage,"tampered!");};
+        var f=new Fixture("stage-corruption");string p=f.File("x.asi");var e=f.Engine();SafetyEngine.FaultInjector=point=>{if(point=="AfterStageCopy")foreach(string stage in Directory.GetFiles(Path.Combine(f.Game,"_RDR2_ModHolster"),"x.asi",SearchOption.AllDirectories))System.IO.File.WriteAllText(stage,"tampered!");};
         try{Check(!e.Holster(ModGroup.Mods,new[]{Pick(e,"x.asi")}).Success,"corrupt stage committed");}finally{SafetyEngine.FaultInjector=null;}Check(System.IO.File.ReadAllText(p)=="original","corrupt stage lost original");
     }
     static void SourceMutation()

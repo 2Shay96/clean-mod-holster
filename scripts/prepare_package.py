@@ -18,9 +18,18 @@ for forbidden in ('FaultInjector','TestFreeSpaceBytes','TestManifestLimit','Simu
 readme=['ARTWORK-NOTICE.txt','LICENSE.txt','README.md','BUILD.md','UPGRADE-RECOVERY.md','CHANGELOG.md','UI-CHANGES.md','VALIDATION.md','THIRD-PARTY-NOTICES.txt']
 licences=['docs/ACTION-ICONS.md','docs/HEADER-LETTERING.md','docs/ICON-PROVENANCE.md','docs/LICENCE-PROPOSAL.md','docs/ATTRIBUTION-AUDIT.md','docs/PUBLIC-V23-MIT-LICENSE.txt','docs/SUPPLIED-ALPHA1-MIT-LICENSE.txt']
 evidence=['docs/release/FINAL-STEP1-RESULTS-20261029.md','docs/release/FINAL-UI-CHECKS-20261029.md','docs/evidence/archive-provenance.json','docs/evidence/sdk.json','docs/evidence/final-ui-native-20261029/final15-source-receipt.json','docs/evidence/final-ui-native-20261029/final15-native-results.xml','docs/evidence/final-ui-native-20261029/step3-ui-output.txt']
+evidence += ['docs/release/PORTABLE-FOLDER-CHECKS-20261106.md']
+evidence += ['docs/release/RECOVERY-FOLDER-CHECKS-20261106.md']
+evidence += ['docs/evidence/recovery-folder-20261106/'+name for name in [
+    'recovery-folder-build-20261106.txt','recovery-folder-extended-20261106.txt',
+    'recovery-folder-native-all-20261106.txt','recovery-folder-native-final.txt',
+    'recovery-folder-extended-final.txt','recovery-folder-extended-20261106.xml',
+    'recovery-folder-native-all-20261106.xml','recovery-folder-native-final.xml',
+    'recovery-folder-extended-final.xml']]
+evidence += ['docs/evidence/news-links-20261106/news-links-build-20261106.txt','docs/evidence/news-links-20261106/news-links-build-retry-20261106.txt']
 notice=b'PRIVATE RELEASE CANDIDATE. Licence approved by author on 28 October 2026. Public distribution is not approved. See VALIDATION.md for actual evidence and remaining limits.\n'
 if args.distribution:
-    notice=b'CLEAN - Mod Remover and Holster v3.2 by 2Shay. Windows / .NET Framework 4.8. Keep CLEAN_v3.2.exe and CLEAN_v3.2.exe.config together outside the game folder. Read README.md, LICENSE.txt, THIRD-PARTY-NOTICES.txt, ARTWORK-NOTICE.txt and VALIDATION.md before use.\n'
+    notice=b'CLEAN - Mod Remover and Holster v3.2 by 2Shay. Windows / .NET Framework 4.8. Keep CLEAN_v3.2.exe and CLEAN_v3.2.exe.config together; the pair may go beside RDR2.exe. Keep guides/notices/source outside the game. See README for the shortcut alternative. Read README.md, LICENSE.txt, THIRD-PARTY-NOTICES.txt, ARTWORK-NOTICE.txt and VALIDATION.md before use.\n'
 def sha(data): return hashlib.sha256(data).hexdigest()
 def pack(path,files):
     members={name:p.read_bytes() for name,p in files}
@@ -45,7 +54,7 @@ for folder in ['src','tests','.github']:
             if p.name=='release-test-report.json': continue
             assert p.suffix.lower() not in ('.exe','.dll','.zip','.rpf','.esm','.bsa','.ba2')
             sourcefiles.append((p.relative_to(ROOT).as_posix(),p))
-for name in ['generate_icon.ps1','prepare_package.py','verify_review_package.py','game_inventory.py','prepare_native_test_volume.ps1']:
+for name in ['generate_icon.ps1','prepare_package.py','verify_review_package.py','game_inventory.py','prepare_native_test_volume.ps1','test_portable.ps1']:
     sourcefiles.append(('scripts/'+name,ROOT/'scripts'/name))
 records=[pack(out/'CLEAN-v3.2-binary.zip',binfiles),pack(out/'CLEAN-v3.2-source.zip',sourcefiles)]
 manifest={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'state':'DISTRIBUTION-FORMAT REVIEW; UNPUBLISHED; AUTHOR APPROVAL REQUIRED' if args.distribution else 'PRIVATE RELEASE CANDIDATE; PUBLIC PUBLICATION NOT APPROVED','exeSHA256':sha(binary),'configSHA256':sha(config.read_bytes()),'sourceFiles':{n:sha(p.read_bytes()) for n,p in sourcefiles},'archives':records}

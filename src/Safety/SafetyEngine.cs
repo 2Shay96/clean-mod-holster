@@ -16,7 +16,7 @@ namespace RDR2ModHolster.Safety
     public class Candidate { public string Name, FullPath, Reason; public bool IsDirectory, Recommended, Protected; public ModGroup Group; }
     public class ScanResult { public List<Candidate> Items = new List<Candidate>(); public List<string> Warnings = new List<string>(); public List<string> Notes = new List<string>(); }
     public class SessionInfo { public string Id, State; public ModGroup Group; public int ItemCount; public string Folder; public bool IsLegacy; public SessionKind Kind; public bool NeedsRebind; public string RecordedGame, RecordedDocuments; public long PayloadBytes; }
-    public class OperationResult { public bool Success; public string Message; public string SessionId; public List<string> Errors = new List<string>(); public List<string> Notes = new List<string>(); public List<RestoreConflict> Conflicts = new List<RestoreConflict>(); public bool NeedsRebind; }
+    public class OperationResult { public bool Success; public string Message; public string SessionId; public string SessionPath; public List<string> Errors = new List<string>(); public List<string> Notes = new List<string>(); public List<RestoreConflict> Conflicts = new List<RestoreConflict>(); public bool NeedsRebind; }
     public class RestoreConflict { public string Name, Path, Reason; public bool CanMoveAside; }
     public class RestorePlan
     {
@@ -43,7 +43,8 @@ namespace RDR2ModHolster.Safety
     //   * shorter session/staging paths, and a manifest size guard on write as well as read
     public sealed class SafetyEngine
     {
-        const string ToolFolder = "_RDR2_ModHolster31", Schema = "3.2";
+        public const string RecoveryFolderName = "_RDR2_ModHolster";
+        const string ToolFolder = RecoveryFolderName, PreviousToolFolder = "_RDR2_ModHolster31", Schema = "3.2";
         static readonly string[] ReadableSchemas = { "3.1", "3.2" };
         const long MaxManifestBytes = 64 * 1024 * 1024;
         static long ManifestLimit
@@ -102,7 +103,7 @@ namespace RDR2ModHolster.Safety
             CheckRoots(); var r = new ScanResult();
             try
             {
-                var entries = DirectEntries(GameRoot).Where(x => !Eq(x.Name, ToolFolder)).ToList();
+                var entries = DirectEntries(GameRoot).Where(x => !Eq(x.Name, ToolFolder) && !Eq(x.Name, PreviousToolFolder)).ToList();
                 bool asi = entries.Any(x => !x.IsDirectory && (Ends(x.Name, ".asi") || Eq(x.Name, "ScriptHookRDR2.dll")));
                 bool reshade = entries.Any(x => Eq(x.Name, "ReShade.ini") || Eq(x.Name, "ReShade64.dll") || Eq(x.Name, "reshade-shaders"));
                 bool enb = entries.Any(x => Eq(x.Name, "enbseries.ini") || Eq(x.Name, "enblocal.ini") || Eq(x.Name, "enbseries"));
@@ -127,7 +128,10 @@ namespace RDR2ModHolster.Safety
         public List<SessionInfo> GetSessions(ModGroup group)
         {
             CheckRoots(); var result = new List<SessionInfo>(); StoreNotes = new List<string>();
-            foreach (string d in Directory.GetDirectories(BackupRoot).OrderBy(x => x, StringComparer.Ordinal))
+            var folders = StoreRoots().SelectMany(Directory.GetDirectories).OrderBy(x => x, StringComparer.Ordinal).ToList();
+            if (folders.Where(x => ValidSessionId(Path.GetFileName(x))).GroupBy(Path.GetFileName, StringComparer.OrdinalIgnoreCase).Any(x => x.Count() > 1))
+                throw new IOException("The same session ID exists in both recovery folders. Keep both copies and resolve the duplicate before continuing; neither copy was changed.");
+            foreach (string d in folders)
             {
                 string name = Path.GetFileName(d);
                 if (Eq(name, "logs")) continue;
@@ -796,7 +800,7 @@ namespace RDR2ModHolster.Safety
             var m = new Manifest { Id = Attr(root, "id"), State = Attr(root, "state"), Game = Attr(root, "game"), Documents = Attr(root, "documents"), Legacy = Bool(Attr(root, "legacy")), Kind = SessionKind.Session };
             if (hasKind && !Enum.TryParse(Attr(root, "kind"), out m.Kind)) throw new InvalidDataException("Unsupported session kind.");
             if (!Enum.IsDefined(typeof(SessionKind), m.Kind)) throw new InvalidDataException("Unsupported session kind.");
-            if (!ValidSessionId(m.Id) || !PathEq(Path.Combine(BackupRoot, m.Id), folder) || !Enum.TryParse(Attr(root, "group"), out m.Group) || !Enum.IsDefined(typeof(ModGroup), m.Group) || !States.Contains(m.State)) throw new InvalidDataException("Manifest identity, root, group, or state is unsafe.");
+            if (!ValidSessionId(m.Id) || !IsSessionLocation(folder, m.Id) || !Enum.TryParse(Attr(root, "group"), out m.Group) || !Enum.IsDefined(typeof(ModGroup), m.Group) || !States.Contains(m.State)) throw new InvalidDataException("Manifest identity, root, group, or state is unsafe.");
             // Recorded roots are remembered rather than enforced: the payload is proven by
             // checksum, so a moved game folder is a question for the user, not a dead end.
             m.GameMoved = !PathEq(m.Game, GameRoot);
@@ -838,7 +842,7 @@ namespace RDR2ModHolster.Safety
         static bool Bool(string value) { bool b; if (!Boolean.TryParse(value, out b)) throw new InvalidDataException("Manifest boolean invalid."); return b; }
         void ValidateManifest(Manifest m, string folder)
         {
-            if (!ValidSessionId(m.Id) || !PathEq(folder, Path.Combine(BackupRoot, m.Id)) || !States.Contains(m.State) || m.Items.Count == 0) throw new InvalidDataException("Refusing to write unsafe manifest.");
+            if (!ValidSessionId(m.Id) || !IsSessionLocation(folder, m.Id) || !States.Contains(m.State) || m.Items.Count == 0) throw new InvalidDataException("Refusing to write unsafe manifest.");
             foreach (Item i in m.Items) { ValidateTop(i.Name); if (!ItemStates.Contains(i.State)) throw new InvalidDataException("Unsafe item state."); ValidateMarks(i); }
         }
 
@@ -883,6 +887,11 @@ namespace RDR2ModHolster.Safety
         }
         static bool ProtectedName(string n, bool dir)
         {
+            // Keep the portable app's runtime settings beside its executable. Apply this
+            // policy to scan, manifest recovery and conflict handling, not just UI selection.
+            if (!dir && (Eq(n, "CLEAN_v3.2.exe.config") ||
+                Eq(n, Path.GetFileName(typeof(SafetyEngine).Assembly.Location) + ".config") ||
+                Eq(n, Path.GetFileName(CurrentProcessPath()) + ".config"))) return true;
             string[] exact = { "amd_ags_x64.dll", "bink2w64.dll", "dxilconv7.dll", "ffx_fsr2_api_dx12_x64.dll", "ffx_fsr2_api_vk_x64.dll", "ffx_fsr2_api_x64.dll", "NvLowLatencyVk.dll", "nvngx_dlss.dll", "oo2core_5_win64.dll", "steam_api64.dll", "installscript.vdf", "installscript_sdk.vdf", "title.rgl", ToolFolder };
             if (exact.Any(x => Eq(x, n)) || Starts(n, "_RDR2_ModHolster") || Eq(n, "_RDR2_Mods_Disabled") || Eq(n, "_RDR2_ReShade_Disabled") || Eq(n, "_RDR2_ENB_Disabled") || Ends(n, ".exe") || Ends(n, ".rpf") || (dir && new[] { "12on7", "Redistributables", "x64", ".egstore" }.Any(x => Eq(x, n)))) return true;
             return Starts(n, "steam") || Starts(n, "eossdk") || Ends(n, ".manifest") || Ends(n, ".mancpn") || Ends(n, ".egstore");
@@ -890,7 +899,9 @@ namespace RDR2ModHolster.Safety
         void CheckRoots()
         {
             string exe = Path.Combine(GameRoot, "RDR2.exe"); if (!ExistsAny(exe) || Directory.Exists(exe)) throw new InvalidOperationException("RDR2.exe is no longer present in the selected game folder.");
-            RejectLink(exe); RejectLinkAncestors(GameRoot); RejectLinkAncestors(_documents); if (ExistsAny(BackupRoot)) RejectLink(BackupRoot);
+            RejectLink(exe); RejectLinkAncestors(GameRoot); RejectLinkAncestors(_documents);
+            foreach (string root in new[] { BackupRoot, Path.Combine(GameRoot, PreviousToolFolder) })
+                if (ExistsAny(root)) { RejectLinkAncestors(root); if (!Directory.Exists(root)) throw new IOException("Recovery path is not a folder: " + root); }
         }
         static string CanonicalExistingRoot(string path, string what)
         {
@@ -937,8 +948,37 @@ namespace RDR2ModHolster.Safety
         string BackupPath(string folder, Item i) { return Path.Combine(folder, i.Ns, i.Name); }
         string LegacyRoot(ModGroup g) { return Path.Combine(GameRoot, g == ModGroup.Mods ? "_RDR2_Mods_Disabled" : g == ModGroup.ReShade ? "_RDR2_ReShade_Disabled" : "_RDR2_ENB_Disabled"); }
         string LegacyPayloadPath(ModGroup group, Item item) { string root = LegacyRoot(group); return item.Ns == "Documents" ? Path.Combine(root, "Documents", "modconfig") : Path.Combine(root, item.Name); }
-        string SessionFolder(string id) { if (!ValidSessionId(id)) throw new ArgumentException("Invalid session ID."); string p = Path.Combine(BackupRoot, id); if (!Directory.Exists(p)) throw new IOException("Session folder was not found."); RejectLinkTree(p); return p; }
-        FileStream AcquireLock() { string p = Path.Combine(BackupRoot, "operation.lock"); try { return new FileStream(p, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None); } catch (IOException ex) { throw new IOException("Another Mod Holster operation is already running for this game folder.", ex); } }
+        // Old sessions remain in place: no automatic move/merge of the user's recovery data.
+        IEnumerable<string> StoreRoots() { return new[] { BackupRoot, Path.Combine(GameRoot, PreviousToolFolder) }.Where(Directory.Exists); }
+        bool IsSessionLocation(string folder, string id)
+        {
+            return StoreRoots().Any(root => PathEq(folder, Path.Combine(root, id))) &&
+                StoreRoots().Count(root => ExistsAny(Path.Combine(root, id))) == 1;
+        }
+        string SessionFolder(string id)
+        {
+            if (!ValidSessionId(id)) throw new ArgumentException("Invalid session ID.");
+            var paths = StoreRoots().Select(root => Path.Combine(root, id)).Where(ExistsAny).ToList();
+            if (paths.Count != 1) throw new IOException(paths.Count == 0 ? "Session folder was not found." : "Duplicate session ID in both recovery folders. Keep both copies; recovery is blocked to avoid choosing the wrong one.");
+            if (!Directory.Exists(paths[0])) throw new IOException("Session path is not a folder.");
+            RejectLinkTree(paths[0]); return paths[0];
+        }
+        sealed class StoreLocks : IDisposable
+        {
+            public readonly List<FileStream> Streams = new List<FileStream>();
+            public void Dispose() { for (int i = Streams.Count - 1; i >= 0; i--) Streams[i].Dispose(); }
+        }
+        IDisposable AcquireLock()
+        {
+            var held = new StoreLocks();
+            try
+            {
+                CheckRoots();
+                foreach (string root in StoreRoots()) held.Streams.Add(new FileStream(Path.Combine(root, "operation.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None));
+                return held;
+            }
+            catch (Exception ex) { held.Dispose(); throw new IOException("Could not lock the recovery folders. Another CLEAN operation may be running; close other versions before retrying.", ex); }
+        }
         void CheckRunning()
         {
             foreach (Process process in Process.GetProcesses())
@@ -1012,7 +1052,7 @@ namespace RDR2ModHolster.Safety
             r.NeedsRebind = true;
             return r;
         }
-        OperationResult Ok(string id, string message, List<string> notes) { var r = new OperationResult { Success = true, SessionId = id, Message = message }; if (notes != null) r.Notes.AddRange(notes); return r; }
+        OperationResult Ok(string id, string message, List<string> notes) { var r = new OperationResult { Success = true, SessionId = id, SessionPath = String.IsNullOrEmpty(id) ? null : SessionFolder(id), Message = message }; if (notes != null) r.Notes.AddRange(notes); return r; }
         OperationResult Fail(string id, string message) { Log(message); return new OperationResult { Success = false, SessionId = id, Message = message, Errors = new List<string> { message } }; }
         OperationResult ExceptionResult(string id, Exception ex)
         {
