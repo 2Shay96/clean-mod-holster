@@ -7,8 +7,7 @@ namespace RDR2ModHolster;
 
 internal sealed partial class MainForm
 {
-    // Public author-owned donation link already displayed on CLEAN's Nexus page.
-    private const string SupportUrl = "https://www.paypal.com/donate/?hosted_button_id=G677UQMTPA5EL";
+    // Author-confirmed public support destination.
     private const string KofiUrl = "https://ko-fi.com/2shay";
     private const string DevelopmentUrl = "https://www.nexusmods.com/reddeadredemption2/mods/8084?tab=articles";
     private const string Roadmap = "CLEAN for GTA VI is planned, targeting day-one support for the PC release, subject to compatibility testing. Follow development here.";
@@ -23,8 +22,6 @@ internal sealed partial class MainForm
                 "Support is voluntary. Donations do not buy access, updates, assistance or promised features.\n\n" + Roadmap);
             var kofi = d.AddAction("Support on Ko-fi", Th.Gold);
             kofi.Click += delegate { OpenPublicLink(KofiUrl); };
-            var support = d.AddAction("PayPal", Th.Gold);
-            support.Click += delegate { OpenPublicLink(SupportUrl); };
             var development = d.AddAction("Follow development", Th.T2);
             development.Click += delegate { OpenPublicLink(DevelopmentUrl); };
             var close = d.AddAction("Close", Th.T2, DialogResult.Cancel);

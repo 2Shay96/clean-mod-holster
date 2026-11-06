@@ -7,9 +7,15 @@ The 4 November Ko-fi update changes only the About/Support production file;
 SafetyEngine and operation handlers remain unchanged. The previous CI run covers
 the pre-Ko-fi commit; no new remote CI result is implied.
 
-## Ko-fi application update - 4 November 2026
+## Ko-fi-only application update - 4 November 2026
 
-Current EXE SHA256: `42fd23b217fb7535c073b2b36f62b60ec7310873fef5671a4fcb2411c76c31fd`. Config remains unchanged.
+At the author's request, the PayPal button and destination constant have been removed.
+Ko-fi is the only donation link; Follow development and Close remain. The new build
+again passed engine38/release21/UI224 with four Linux-only skips. Earlier 13-case
+native results belong to the preceding Ko-fi-plus-PayPal executable; current focused
+packaged checks are identified separately in the companion report.
+
+Current EXE SHA256: `5341a8933eb4047664a84136309d832b2ab82533a7538330fbbfc90ccdd6c95f`. Config remains unchanged.
 Engine38/release21 PASS with four Linux-only skips; UI224 assertions PASS, zero
 warnings/errors. About actions fit at96/120/144/192 simulated DPI and compact
 window sizes; initial Close focus retained. Exact-package native/build/link checks

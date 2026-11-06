@@ -46,7 +46,6 @@ separate third-party material, excluded from the code licence; see
 current artwork; that decision is not rights-holder permission. CLEAN is opted out of
 Nexus Donation Points.
 
-[Support CLEAN through PayPal](https://www.paypal.com/donate/?hosted_button_id=G677UQMTPA5EL).
 [Support 2Shay on Ko-fi](https://ko-fi.com/2shay).
 Support is voluntary and does not buy access, updates, assistance or promised features.
 
