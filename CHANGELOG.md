@@ -1,6 +1,6 @@
 # CLEAN - Mod Remover and Holster v3.2
 
-Version 3.2. Prepared for author review on 3 November 2026; no previous v3.2 distribution.
+Version 3.2. Prepared for author review on 7 November 2026; no previous v3.2 distribution.
 
 Alpha 1 already included reviewed selections, unchecked unknowns, protected paths,
 journalled SHA256 inventories, staging, resumable operations, no silent overwrites,
@@ -38,9 +38,17 @@ Windows preparation changes:
 - Adopt author-approved source-available noncommercial code licence. Earlier MIT
   rights survive. Retain asset notices including Holster CC BY-SA 3.0 and separate art.
 
-Actual Windows results, build identities and earlier Steam/LML/Script Hook game
+Actual Windows results, build identities and Steam/LML/Script Hook/ReShade game
 evidence: VALIDATION.md. Historical crashes are not proven fixed. No Online or ban
 safety claim. Exact-package checks and remaining limits are recorded in the accompanying validation report.
 
 ### Development links
 - About now clearly labels News & Support on Ko-fi and Source & Issues on GitHub. GTA VI news points to Ko-fi; support remains voluntary.
+
+### Release validation
+- Repeat the full Steam/Vulkan Story cycle using the exact final executable with
+  LML, Script Hook/Native Trainer and ReShade6.8.0. All34 restored payload hashes
+  matched before gameplay. Repeat LML reinstall conflicts and recover both versions
+  after app restart. Historical crash causes and untested launcher limits remain.
+- Verify Windows CI at45a3e2a: engine38/release22/extended21/native17 pass,
+  four Linux-only skips. Final documentation refresh retains the gameplay-tested EXE.

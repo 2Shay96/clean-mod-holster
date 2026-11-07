@@ -23,9 +23,9 @@ Keep them together. Version 3.2.0.0 / informational version 3.2.0 identifies thi
 `HOLSTER_TESTS` enables fault hooks only in test assemblies. `UI_TESTS` enables metric
 simulation only in the UI harness. NativeTests references the production executable;
 its report records the loaded assembly hash. Source/packaging checks reject test hooks
-in production. Windows CI passed on 3 November 2026 at source commit
-6c30496f659c5c45efe94fea0c825af56de281d2: engine38/release21/extended17/native13
-passes, four explicit Linux-specific skips. CI does not test native UI or launch RDR2.
+in production. Windows CI passed on 7 November 2026 at source commit
+45a3e2a53468a7460f4a10b5b4cc41294a682a7a: engine38/release22/extended21/native17,
+four Linux-only skips. Run42315170543. CI does not test native UI or launch RDR2.
 It rebuilds its own executable; it does not validate identical local packaged bytes.
 
 Fixtures live under private `scratch/` or the system temporary directory. Extended
@@ -60,3 +60,10 @@ identity. An earlier attempt that disabled Git/SourceLink queries produced diffe
 bytes and is retained in the evidence. The versionless-folder and About updates use
 the ordinary build policy. A new commit/rebuild receives fresh hashes and matching
 package checks. Source-path mapping does not redirect application data.
+
+The documentation-refresh package retains the exact gameplay-tested executable
+instead of rebuilding it after the commit. Its production inputs match the earlier
+tested source snapshot; all are present here. Source baseline is45a3e2a plus the
+included documentation/packaging changes. The release manifest records every file
+hash. The CI artifact and normal source builds may differ in embedded build metadata;
+use the published binary ZIP checksum to identify the tested distribution.

@@ -20,6 +20,9 @@ licences=['docs/ACTION-ICONS.md','docs/HEADER-LETTERING.md','docs/ICON-PROVENANC
 evidence=['docs/release/FINAL-STEP1-RESULTS-20261029.md','docs/release/FINAL-UI-CHECKS-20261029.md','docs/evidence/archive-provenance.json','docs/evidence/sdk.json','docs/evidence/final-ui-native-20261029/final15-source-receipt.json','docs/evidence/final-ui-native-20261029/final15-native-results.xml','docs/evidence/final-ui-native-20261029/step3-ui-output.txt']
 evidence += ['docs/release/PORTABLE-FOLDER-CHECKS-20261106.md']
 evidence += ['docs/release/RECOVERY-FOLDER-CHECKS-20261106.md']
+evidence += ['docs/release/STORY-RESHADE-CYCLE-20261106.md',
+             'docs/release/LML-CONFLICT-CHECKS-20261106.md',
+             'docs/release/WINDOWS-CI-20261107.md']
 evidence += ['docs/evidence/recovery-folder-20261106/'+name for name in [
     'recovery-folder-build-20261106.txt','recovery-folder-extended-20261106.txt',
     'recovery-folder-native-all-20261106.txt','recovery-folder-native-final.txt',
@@ -59,5 +62,6 @@ for name in ['generate_icon.ps1','prepare_package.py','verify_review_package.py'
 records=[pack(out/'CLEAN-v3.2-binary.zip',binfiles),pack(out/'CLEAN-v3.2-source.zip',sourcefiles)]
 manifest={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'state':'DISTRIBUTION-FORMAT REVIEW; UNPUBLISHED; AUTHOR APPROVAL REQUIRED' if args.distribution else 'PRIVATE RELEASE CANDIDATE; PUBLIC PUBLICATION NOT APPROVED','exeSHA256':sha(binary),'configSHA256':sha(config.read_bytes()),'sourceFiles':{n:sha(p.read_bytes()) for n,p in sourcefiles},'archives':records}
 (out/'package-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+(out/'SHA256SUMS.txt').write_text(''.join(r['sha256']+'  '+r['file']+'\n' for r in records))
 print(out)
 for r in records:print(r['file'],r['bytes'],r['sha256'])

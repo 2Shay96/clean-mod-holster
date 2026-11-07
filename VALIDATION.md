@@ -1,178 +1,98 @@
-# CLEAN - Mod Remover and Holster — Windows validation
+# CLEAN - Mod Remover and Holster — validation
 
-Updated 6 November 2026. Author: 2Shay. Production .NET Framework 4.8; SDK 8.0.427.
-Prepared release materials remain unpublished pending author review. Private repository
-commit 6c30496f659c5c45efe94fea0c825af56de281d2 passed Windows CI run41675459572.
-The 4 November Ko-fi update changes only the About/Support production file;
-SafetyEngine and operation handlers remain unchanged. The previous CI run covers
-the pre-Ko-fi commit; no new remote CI result is implied.
+Updated 7 November 2026. Author: 2Shay. Production: .NET Framework 4.8.
+Prepared packages remain unpublished pending author review.
 
-## Portable placement — current local candidate, 6 November 2026
+## Executable and corresponding source
 
-The engine now protects CLEAN's companion config in all file-operation routes.
-Current Windows build: engine38/release22 PASS, four Linux-only skips; UI232 PASS.
-Production native portable17 and focused native8 checks PASS. See
-[portable checks](docs/release/PORTABLE-FOLDER-CHECKS-20261106.md) for hash/evidence,
-retained harness failures, installation guidance and limits. Current changes have
-not been committed or run in remote CI; base0c85b74 CI passed previously.
+EXE SHA-256: `856a3cbd38c4e33a4dbdea8d6829a31b2821fa71ac047d557a337ef1f913f315`.
+Config SHA-256: `f3f140a31d2664a30f1e42a9ac873e51e4d8e5f0af44f9a999554d71f2c7e4aa`.
+These are the exact files used for the current Windows fixture and game checks.
+The final documentation refresh retains those bytes; it does not rebuild the app.
+All production source/assets/project/config files match the tested source snapshot.
+Source baseline: Git commit45a3e2a53468a7460f4a10b5b4cc41294a682a7a plus the
+included documentation/packaging refresh. Original local binary build context was
+parent0c85b740214fa183bb4dcb69361b6a7a89edd557. See BUILD.md for reproducibility limits.
 
-The sections below record earlier candidates, not fresh evidence for this executable.
+## Current evidence
 
-## News and source links - 6 November 2026
-
-Earlier news-links EXE SHA256: `750ecb56586451e5dbc824d3e55b51983195484cbb763d4678d1e0fe1d1625c8`.
-About now links News & Support on Ko-fi and Source & Issues on GitHub. The conditional
-GTA VI roadmap directs readers to Ko-fi. Only MainForm.About.cs changed in production
-since the versionless-folder regression below. Engine38/release21 PASS, four Linux-only
-skips; UI232 assertions PASS, including compact and96/120/144/192 DPI About layouts.
-The first build attempt could not replace the open preview EXE; it was closed normally
-and the retry built with zero warnings/errors. Both logs are retained under
-`docs/evidence/news-links-20261106/`. Exact-package native checks and source comparison
-are recorded in the companion report. Earlier game/disk-full results keep their own
-build identities. No remote CI result is claimed for these uncommitted changes.
-
-## Versionless recovery folder - 6 November 2026
-
-New sessions use `_RDR2_ModHolster`; earlier `_RDR2_ModHolster31` sessions remain
-recoverable in place. This update changes the safety engine and operation-result
-paths, so the following are new local regression results rather than inherited claims.
-
-Previous versionless-folder EXE SHA256: `a99abf03bddb84f2e1de3b05969e4b996bc9cb2695d9efdc2515dcdf3c1d823d`.
-Engine38/release21 PASS, four Linux-only skips; UI224 PASS, zero build warnings/errors.
-Extended20 and native production-EXE16 PASS, plus final5 focused cases on each runtime.
-Both full suites include10,000-file hash roundtrips. Final focused cases cover old-store
-schema3.1 recovery/locks, dual stores, duplicate IDs, interruptions, purge and junctions.
-See `docs/release/RECOVERY-FOLDER-CHECKS-20261106.md` and companion package report.
-No current real-game, genuine disk-full or remote CI rerun is implied. Prior Ko-fi-only
-build hashes/results below are historical. Existing artwork and environment limits remain.
-
-## Previous Ko-fi-only application update - 4 November 2026
-
-At the author's request, the PayPal button and destination constant have been removed.
-Ko-fi is the only donation link; Follow development and Close remain. The new build
-again passed engine38/release21/UI224 with four Linux-only skips. Earlier 13-case
-native results belong to the preceding Ko-fi-plus-PayPal executable; current focused
-packaged checks are identified separately in the companion report.
-
-Previous EXE SHA256: `5341a8933eb4047664a84136309d832b2ab82533a7538330fbbfc90ccdd6c95f`. Config remains unchanged.
-Engine38/release21 PASS with four Linux-only skips; UI224 assertions PASS, zero
-warnings/errors. About actions fit at96/120/144/192 simulated DPI and compact
-window sizes; initial Close focus retained. Exact-package native/build/link checks
-are recorded in the companion validation report. Prior game/disk-full evidence
-retains original build labels.
-
-## Previous final15 source and executable
-
-Final15 EXE SHA256:
-`8431b008f7e6207d57c726c984dc12fe7d53b5f501652a032c76572103b2ea9e`
-Matching config SHA256:
-`f3f140a31d2664a30f1e42a9ac873e51e4d8e5f0af44f9a999554d71f2c7e4aa`
-
-| Check | Actual result and evidence |
+| Check | Actual result |
 |---|---|
-| Final14 standard regression | Engine 38 pass/2 Linux-specific skips; release 21 pass/2 Linux-specific skips; UI 190 pass. final-ui-native-20261029/final14-regression.txt |
-| Final15 relevant reruns | UI 190 and exact-assembly native 12 pass; no native skips/failures, 0 build warnings/errors. Same directory: final15-ui-native-regression.txt, final15-native-results.xml |
-| Source correspondence | final15-source-receipt.json records sources/assets and EXE/config. Three production UI files changed since step 1; SafetyEngine unchanged |
-| Actual Windows rendering | 100/125/150/200%, compact windows/scrolling, fresh/existing About, 1366×768/100%, 1920×1080/150%, Scan Mods visible focus/Space. FINAL-UI-CHECKS-20261029.md |
-| Step 1 earlier source | Engine 38/release 21/UI 190/native 12, abrupt worker-stop recovery 1, injected faults 4 pass; four explicit Linux-specific skips across standard suites. FINAL-STEP1-RESULTS-20261029.md |
-| Earlier human keyboard | About focus/Space; review arrows/Space/Escape; Cancel-focused Enter; DELETE text-field Enter leaves dialog open, Escape cancels. manual-keyboard-human-results.json |
+| Windows CI, source45a3e2a | Engine38, release22, extended21 and native17 PASS; four Linux-only skips, zero failures. Run42315170543. CI builds its own executable. |
+| Local Windows build | Engine38/release22 PASS; four Linux-only skips, zero warnings/errors. |
+| Local UI harness | 232 assertions PASS, including About sizing and initial focus. |
+| Portable placement | Production EXE17 checks and focused native8 PASS; exact extracted prior ZIP17 PASS. Adjacent RDR2.exe detection, protected EXE/config and normal close tested. |
+| Actual Story Mode | Exact EXE/config beside RDR2.exe; clean → modded → holster → clean → restore → modded PASS on Steam/Vulkan. |
+| Restoration hashes | All34 mod/ReShade payloads matched independent pre-holster hashes before the final launch; all37 frozen files matched at that point. |
+| Actual LML reinstall conflict | Six occupied items blocked before changes. Both versions preserved and moved-aside files recovered after restarting CLEAN. Original13 + ReShade21 + protected pair matched pretest hashes. |
 
-Raw evidence is under docs/evidence/; named reports are under docs/release/.
-The earlier final14/final15 PowerShell transcripts retain invocation/timing but omit
-child stdout. A fresh UI harness confirmation passed 190 assertions; complete output
-is retained in final-ui-native-20261029/step3-ui-output.txt. Native XML retains all
-12 final15 results and the exact loaded EXE hash.
-Candidate05 exact ZIP extraction/source/native checks passed on 29 October; see
-FINAL-PACKAGE-CHECKS-20261029.md. The final distribution-format package receives its
-own checksum/extraction/exact-assembly check recorded in the companion validation
-report. Candidate04 and candidate05 are retained unchanged for rollback/history.
+Reports: [Story/ReShade](docs/release/STORY-RESHADE-CYCLE-20261106.md),
+[LML conflicts](docs/release/LML-CONFLICT-CHECKS-20261106.md),
+[portable placement](docs/release/PORTABLE-FOLDER-CHECKS-20261106.md),
+[recovery stores](docs/release/RECOVERY-FOLDER-CHECKS-20261106.md), and
+[Windows CI](docs/release/WINDOWS-CI-20261107.md).
+The companion final-package report records extraction/checksum and exact-assembly reruns.
+The reports identify local raw evidence paths; independent saves, game/mod backups
+and raw runtime logs are retained privately and are not bundled for distribution.
 
-Native checks cover read-only files, sharing/retry, denied access, invalid/unreadable/
-missing/oversized manifests, case aliases, junctions, changing file types, process locks,
-fresh-process recovery, LML conflicts/moved-aside recovery and ten hash-verified cycles.
-Long paths pass by safe refusal on this host (LongPathsEnabled=0), not a successful
-native roundtrip above 260 characters. Destructive/fault fixtures are disposable.
+Game: Steam build13773296, RDR2 1.0.1491.50, Vulkan. Controlled set: LML Beta11,
+Script Hook/Native Trainer and ReShade6.8.0 with SweetFX Monochrome. User loaded and
+quit Story Mode and checked F5/End/Scroll Lock; fresh logs corroborated initialization.
+Shared ReShade Vulkan registration remains installed. CLEAN managed game-local files;
+inactive/active behavior was tested in Story Mode, without a live module inventory.
+After the final launch five runtime logs and ReShadePreset.ini changed normally;
+31 other frozen files remained identical. Restoration proof uses pre-launch hashes.
+No Red Dead Online test occurred; holstering does not prove vanilla integrity or
+guarantee online access or protection from restrictions/bans.
 
-Step 1 stopped a worker during staging; restart preserved the original 8 MiB SHA256.
-Instrumented faults covered corrupt staging, source mutation, interrupted restore
-and injected disk shortage. These belong to step 1 EXE
-`76c38fd1efd79c38c7e512c9693196eeb1a001f2227b0e10e0b88a9c6180b277`.
-They are not new genuine disk-full or physical power-loss results.
+## Failures retained and corrected
 
-## Earlier native results retained
+- An initial clean launch failed before the menu with FFFFFFF, before ReShade was
+  installed. Three Vulkan caches were preserved outside Settings; retry passed.
+  The crash cause remains unconfirmed; no general crash fix is claimed.
+- Home conflicted with Rockstar's overlay; ReShade uses End. Duplicated recursive
+  shader search suffixes caused invalid-path123. Original config/logs were preserved,
+  direct existing paths substituted and visible effect/compilation checks passed.
+- Portable harness startup timing and overlapping synthetic Documents caused initial
+  harness failures. Bounded startup polling and separate fixture roots corrected
+  those harness defects; production protection was not weakened.
+- An open preview locked a build output. Normal close and rebuild passed.
 
-| Scenario | Recorded result |
-|---|---|
-| Genuine disk full | Windows error 112 twice on disposable 128 MiB VHD; original 16 MiB hash retained and interrupted journal recovered. native-volume-results-01.xml/-02.xml; second run verifies corrected recovery wording |
-| Separate volumes | T:→C:→T: Unicode/Documents/modconfig fixture hashes matched in the volume reports. Real Known Folder was not redirected |
-| Large inventory | 10,000 synthetic 64-byte file hashes retained. First net8/native 182.2/202.1s; heavier-I/O second 316.6/326.3s. native-windows-01/02.txt and related extended evidence; not real-mod throughput |
-| ACL/manifest fixtures | Fixture privilege/restore defects corrected; latest extended-windows-03.txt 5/5 and native-windows-03.txt pass. Earlier failures retained |
-| Supplied Alpha 1 baseline | Production 0 warnings/errors. Engine originally reported 40 but two Windows link cases were no-ops; corrected 38 passes/2 skips. Release 20 pass/2 skip/1 stale readonly expectation failure; later corrected to intended roundtrip |
+## Earlier tests and their limits
 
-Per-scenario earlier runs are not one complete run on final15. VHD/fixtures remain
-retained; T: absent at last check. No real user files were deleted for testing.
+Native fixtures cover read-only/sharing/ACL failures; unreadable, missing, oversized
+and corrupt manifests; process locks; changing sources; traversal/case aliases;
+junction refusal; fresh-process recovery; older sessions; conflict recovery and
+repeated hash cycles. CI includes10,000 synthetic-file roundtrips,60.839s on .NET8
+and61.843s on .NET Framework. These are fixture timings, not real-mod throughput.
+Current local UI checks supplement earlier actual100/125/150/200% rendering and
+1366×768/100%,1920×1080/150% checks. Approved screenshots are plain1920×1080 PNGs
+from native cursor-free4K captures; some unchanged screens retain earlier provenance.
+Human keyboard review, About, confirmation and DELETE input checks passed.
 
-## Actual Steam Story Mode cycle
+Genuine disk-full recovery twice passed on a disposable128MiB VHD on earlier builds:
+Windows error112, original16MiB hash retained, journal recovered. The final executable
+did not repeat that physical volume test. Earlier abrupt-worker and injected
+corruption/source-mutation/interruption/space tests retain their own build identities.
+Historical reports and original failures remain preserved; they are not relabelled
+as new final-build results. See included FINAL-STEP1 and FINAL-UI reports.
 
-Steam build 13773296, RDR2.exe 1.0.1491.50, Vulkan.
-Exact earlier review01 EXE:
-`ec149b742d80de281badcc47e8f96e93083ede2b886c735b87a27eb65823f9e2`.
+Supplied Alpha1 documentation reported synthetic Linux/Mono/Xvfb results. Those are
+prior reported results, not results reproduced on this PC. Supplied v3.1 UI claims
+are reconciled in UI-CHANGES.md. Earlier Windows/game results remain separately dated.
 
-Clean Story → modded Story (LML Beta 11, Script Hook/Native Trainer) → holstered
-Story without trainer → restored modded Story with trainer was visually observed.
-All 10 mod hashes matched independent originals after restore; all 123 pre-mod file
-hashes matched. Evidence: game/live-cycle-01.json, game/controlled-mod-set.json,
-game/test-mod-provenance.json.
+## Remaining limitations
 
-Real LML reinstall reported conflicts before mutation; move-aside recovery preserved
-both versions, with original 10 and second-version 8 hashes verified.
-Evidence: game/lml-live-conflict-cycle.json. Historical LML crash cause is not proven.
-Actual ReShade gameplay was deferred by the author.
+- Epic/standalone Rockstar editions, mixed monitors and real Known Folder redirection
+  are untested. Native paths above260 characters safely refused on this host;
+  successful roundtrips with long-path policy enabled remain unverified.
+- Every interruption boundary, physical power loss, exhaustive accessibility and
+  historical crash causes remain unverified. ACLs, alternate data streams and
+  hard-link topology are not preserved as a full backup system would preserve them.
+- Controlled gameplay does not establish compatibility with every mod or ENB.
+- Official Rockstar artwork has no written redistribution clearance. Author chose
+  to retain it; Take-Two's automatic reply is not permission. Nexus Donation Points
+  remains OFF. Ko-fi is the only support link; support is voluntary.
 
-Latest 29 Oct read-only check confirms 10 originals safely holstered in
-session 66f074d07525889a, pristine hashes matched and live paths absent:
-game/ui-final15-current-holstered-20261029.json. Second-version 8 files remain
-recoverable in session e27be1751a829b84. Earlier statements that originals remain
-installed are superseded. Independent save/mod backups and baseline are retained.
-No real-game Delete or Red Dead Online test occurred.
-
-The full game cycle belongs to review01, not final15 or an unbuilt final ZIP.
-Later UI changes received relevant regressions; no new gameplay result is inferred.
-
-## Remaining checks and limits
-
-- Final distribution packaging results are recorded separately in the companion
-  validation report; prior results are not relabelled as new tests.
-- Untested Epic/standalone Rockstar, mixed monitors, real Known Folder redirection,
-  native long-path-enabled host and actual ReShade gameplay.
-- Every interruption boundary, physical power loss and exhaustive assistive technology
-  unverified. ACLs, alternate data streams and hard-link topology are not preserved
-  as a full backup system would preserve them.
-- Historical crash cause/general compatibility unproven. Holstering does not verify
-  vanilla archives or guarantee online access/ban safety.
-- Author adopted the licence28 Oct and chooses current artwork for release.
-  Take-Two request sent; only automatic reply recorded, no explicit permission.
-  Artwork clearance remains unresolved; CLEAN was opted out of Donation Points3Nov.
-- Private Windows CI passed3Nov: engine38/release21/extended17/native13, four
-  Linux-specific skips. No CI UI/game/physical-disk-full coverage. CI executable
-  differs from the local packaged binary. RDR2Mods author account2Shay verified;
-  no listing submitted. GitHub funding-button eligibility remains unconfirmed.
-
-No unexplained file loss, overwrite or unrecoverable operation was observed in passing
-scenarios. This is limited evidence, not a guarantee.
-
-## Historical claims
-
-Supplied Alpha 1 reports Linux .NET/Mono/Xvfb 40 engine passes, 22 release passes/1
-Windows skip and 141 UI assertions. These are prior reported results, not results
-reproduced on this PC. Supplied v3.1 UI notes/counts are superseded by UI-CHANGES.md.
-Imports and raw failures remain preserved.
-
-## Screenshot walkthrough — 3 November 2026
-
-Ten new native3840x2160 app-window captures downsampled to1920x1080 PNG were
-visually checked and approved by the author. Dialogs use the actual app background;
-no pointer capture, added labels or framing. Disposable fixture session03260daceff8568f
-completed Holster/Restore; both mod hashes and unknown/protected fixture bytes matched.
-The permanent Delete prompt was cancelled. This is a packaged-assembly fixture cycle,
-not a new real-game compatibility result. No production changes were made for captures.
+No unexplained file loss, silent overwrite or unrecoverable operation was observed
+in the passing scenarios. This is bounded test evidence, not a guarantee.
